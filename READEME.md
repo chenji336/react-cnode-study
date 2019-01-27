@@ -26,5 +26,9 @@ webpack默认支持js的
 + 定义一个server-entry.js export <App />
 + 使用react-dom/server 把 server-entry renderToString 成string
 + 把上面的string插入到template.html的root下面（这样就可以使用跟客户端一样的template.html)
++ 需要npm run build，在进行npm run start
 疑惑： 
     服务端渲染哪里加强了SEO了？不都只是替换掉root里面的内容吗？也都引用了外部的js
+
+##webpack-dev-server配置
+注意点： 需要删除掉dist，否则进行historyApiFallback的时候会报错（因为会先去找本地的dist，没有在找缓存）
