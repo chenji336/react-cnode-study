@@ -8,7 +8,7 @@ module.exports = {
     output: {
         filename: '[name][hash].js',
         path: path.join(__dirname,'../dist'),
-        // publicPath: '/public' // 注释一下，否则测试的时候需要在dist里面在进行一个public的目录
+        publicPath: '/public/' // 注释一下，否则测试的时候需要在dist里面在进行一个public的目录
     },
     module: {
         rules: [
@@ -26,6 +26,8 @@ module.exports = {
         ]
     },
     plugins: [
-        new HTMLPlugin()
+        new HTMLPlugin({
+            template: path.join(__dirname, '../client/template.html')
+        })
     ]
 };
