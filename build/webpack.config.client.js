@@ -1,5 +1,6 @@
 const path = require('path')
 const HTMLPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -10,7 +11,7 @@ const config = {
     output: {
         filename: '[name][hash].js',
         path: path.join(__dirname,'../dist'),
-        publicPath: '/public/' // 注释一下，否则测试的时候需要在dist里面在进行一个public的目录
+        publicPath: '/public/' // 坑：为啥public后面也要斜杠，因为热更新的js也会使用这个publicPath，如果没有/，则public080999.js,正常应该是public/080999.js，可以打开chrome-network-preserve log进行查看
     },
     module: {
         rules: [
@@ -35,11 +36,17 @@ const config = {
 }
 
 if (isDev) {
+    config.entry = {
+        app: [
+            'react-hot-loader/patch', // 热更新需要的js，也打包到app[hash]去
+            path.join(__dirname, '../client/app.js')
+        ], 
+    }
     config.devServer = {
         host: '0.0.0.0',
         port: '8888',
         contentBase: path.join(__dirname, '../dist'), // 内容的缓存位置
-        // host: true, // 进行热加载，现在还没有，所以先不需要
+        hot: true, // 进行热加载，现在还没有，所以先不需要
         overlay: {
             errors: true // 报错的时候出现一个悬浮层出现错误
         },
@@ -49,6 +56,7 @@ if (isDev) {
         }
 
     }
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
 }
 
 module.exports = config

@@ -32,3 +32,17 @@ webpack默认支持js的
 
 ##webpack-dev-server配置
 注意点： 需要删除掉dist，否则进行historyApiFallback的时候会报错（因为会先去找本地的dist，没有在找缓存）
+
+##hot-module-reaplacement
+热更新流程：
+1. 普通热更新
+    + webpack.config中开启hot:true,并且调用plugin：new webpack.HotModuleReplacement()
+    + moudle.hot.accept()即可，不过state每次刷新的时候都会重制
+2. 兼容react的热更新
+    + 安装react-hot-loader
+    + webpack.congif entry中加入react-hot-loader/patch
+    + 配置.babelrc,plugins中添加react-hot-loader/babel，如果全是es5的话可以不使用babel，因为jsx有可能使用es6和react语法
+    + app.js使用module.hot.accept监听App.jsx重新render（好像是使用了websocket推送），AppContainer进行包裹这样state状态才可以   保留
+遇到的坑：
+    为啥public后面也要斜杠，因为热更新的js也会使用这个publicPath，如果没有/，则public080999.js,正常应该是public/080999.js，可以打开chrome-network-preserve log进行查看
+
