@@ -18,6 +18,7 @@ const render = Component => (
 )
 render(App);
 console.log('module.hot:', module.hot)
+// module.hot.accept(); // 简写成这种现在也能成功，不知道是否有副作用
 if (module.hot) {
     module.hot.accept('./App.jsx', () => {
         console.log('accept hot') // 测试是不是进行了监听。答：确实，每次都会执行

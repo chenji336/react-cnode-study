@@ -1,11 +1,12 @@
-#react-cnode-study
+# react-cnode-study
 从0-1的学习react的服务端渲染，不过使用的是webpack的3.x版本，先按照这些来使用，后续可以自己在进行改造
 
-##webpack基础配置
+## webpack基础配置
 配置输入以及输出，通过参数[name][hash]，每次文件的改变都会引起hash值的改变
 webpack默认支持js的
 
-##webpack loader的基本应用
+
+## webpack loader的基本应用
 我们需要jsx语法，webpack默认是不支持的，所以需要loader进行转化
 需要安装react-dom,可以对比react-native.一个是浏览器上的，一个是手机端的
 就算没有使用到React也要import，因为所有的jsx语法都需要转译成React.createElement
@@ -15,11 +16,14 @@ webpack默认支持js的
     - 支持什么转换  preset中进行编写 babel-preset-es2015支持es6
     - react 支持react转换
 
-##服务端渲染基础配置
-####单页应用存在的问题？
+
+## 服务端渲染基础配置
+
+#### 单页应用存在的问题？
 + SEO不友好，一开始取回来的只是一个没有内容的html，需要后续去填充
 + 首次加载慢，因为有很多的js和css需要去加载
-####开始进行服务端配置
+
+#### 开始进行服务端配置
 配置一下package.json build的时候client和server都能出来，使用rimraf清除dist目录（在webpack使用CleanWebpackPlugin也可以）
 服务端渲染跟客户端渲染不同：后台生成html，然后一起渲染给前端
 过程：
@@ -30,10 +34,11 @@ webpack默认支持js的
 疑惑： 
     服务端渲染哪里加强了SEO了？不都只是替换掉root里面的内容吗？也都引用了外部的js
 
-##webpack-dev-server配置
+
+## webpack-dev-server配置
 注意点： 需要删除掉dist，否则进行historyApiFallback的时候会报错（因为会先去找本地的dist，没有在找缓存）
 
-##hot-module-reaplacement
+## hot-module-reaplacement
 热更新流程：
 1. 普通热更新
     + webpack.config中开启hot:true,并且调用plugin：new webpack.HotModuleReplacement()
@@ -45,4 +50,14 @@ webpack默认支持js的
     + app.js使用module.hot.accept监听App.jsx重新render（好像是使用了websocket推送），AppContainer进行包裹这样state状态才可以   保留
 遇到的坑：
     为啥public后面也要斜杠，因为热更新的js也会使用这个publicPath，如果没有/，则public080999.js,正常应该是public/080999.js，可以打开chrome-network-preserve log进行查看
+
+## 开发时的服务端渲染
+问题： 服务端渲染不想每次有所改动都需要重新编译打包?
+解决思路： 
+1. 获取html：通过axios读取打包后的index.html,注意是/public/index.html
+2. 获取打包后的server-entry.js: 在js中引入webpack，进行watch，每次都从缓存中读取bundle.js(但是路径还是要写成dist下面)
+3. express.static的public解决：通过代理，把所有的/public都代理到dev:client启动的服务上
+
+疑惑：这样之后为什么服务端也可以进行热更新了？
+渲染完成之后，还是会调用client端的js代码的，可以看日志发现调用了app.js
 
