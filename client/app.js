@@ -8,21 +8,20 @@ import App from './App.jsx' // webpack还没有配置，所以需要写后缀jsx
 // ReactDOM.hydrate(<App />, document.getElementById('root')) // 不建议放在documeng.body上面，会有warn提示的
 
 const root = document.getElementById('root')
-const render = Component => (
-    ReactDOM.render(
-        <AppContainer>
-            <Component></Component>
-        </AppContainer>,
-        root
-    )
+const render = Component => ReactDOM.render( // eslint-disable-line
+  <AppContainer>
+    <Component />
+  </AppContainer>,
+  root,
 )
+
 render(App);
 console.log('module.hot:', module.hot)
 // module.hot.accept(); // 简写成这种现在也能成功，不知道是否有副作用
 if (module.hot) {
-    module.hot.accept('./App.jsx', () => {
-        console.log('accept hot') // 测试是不是进行了监听。答：确实，每次都会执行
-        const NextApp = require('./App.jsx').default
-        render(NextApp)
-    })
+  module.hot.accept('./App.jsx', () => {
+    console.log('accept hot') // 测试是不是进行了监听。答：确实，每次都会执行
+    const NextApp = require('./App.jsx').default // eslint-disable-line
+    render(NextApp)
+  })
 }

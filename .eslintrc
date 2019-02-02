@@ -1,0 +1,3 @@
+{
+    "extends": "standard"  // 继承最基础的elsint规则
+}

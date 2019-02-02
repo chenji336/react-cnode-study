@@ -1,0 +1,9 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space # 还有tab风格
+indent_size = 2 # 一个tab是两格
+end_of_line = lf # 尾部结束以lf，这样保证了widnow和mac等报错系统一致性
+insert_final_newline = true # 保存时候会插入尾部插入一行
+trim_trailing_whitespace = true # 如果尾部有空格会自动忽略掉
