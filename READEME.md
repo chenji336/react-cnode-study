@@ -82,7 +82,7 @@ npm i -d eslint babel-eslint(.eslintrc使用的到)) eslint-loader
 + 添加.editorconfig，配置所需即可
 
 **在git提交之前进行检查，如果不符合规则那么就提示错误**
->
+> 进行hook操作，现在可以npm i -d husky(哈士奇)安装；package.json里面进行`precommit`,会监听这个script
 
 ## 小技巧
 
