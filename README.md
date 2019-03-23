@@ -33,6 +33,8 @@ webpack默认支持js的
 + 需要npm run build，在进行npm run start
 疑惑：
     服务端渲染哪里加强了SEO了？不都只是替换掉root里面的内容吗？也都引用了外部的js
+解答：
+    可以对比一下浏览时候的html，会发现服务端渲染时候里面已经包含了hello word。引用外部js可能是为了另外一个话题了
 
 
 ## webpack-dev-server配置
