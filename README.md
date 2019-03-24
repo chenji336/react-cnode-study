@@ -1,6 +1,20 @@
 # react-cnode-study
 从0-1的学习react的服务端渲染，不过使用的是webpack的3.x版本，先按照这些来使用，后续可以自己在进行改造
 
+## 小技巧
+
+**npm换行**
+> 添加\然后回车就好
+
+**json或则类似json的格式可以进行注释**
+在配置中进行如下配置
+``` json
+"files.associations": {
+    "*.json": "jsonc",
+    ".eslintrc": "jsonc"
+}
+```
+
 ## webpack基础配置
 配置输入以及输出，通过参数[name][hash]，每次文件的改变都会引起hash值的改变
 webpack默认支持js的
@@ -86,16 +100,43 @@ npm i -d eslint babel-eslint(.eslintrc使用的到)) eslint-loader
 **在git提交之前进行检查，如果不符合规则那么就提示错误**
 > 进行hook操作，现在可以npm i -d husky(哈士奇)安装；package.json里面进行`precommit`,会监听这个script
 
-## 小技巧
+## 工程架构优化
 
-**npm换行**
-> 添加\然后回车就好
+使用webpack-merge
+1. npm i -D webpack-merge
+2. webpack.base.js编写客户端和服务端公用的部分
+3. WebpackMerge(baseConfig, {xxx}),会进行深度复制
 
-**json或则类似json的格式可以进行注释**
-在配置中进行如下配置
-``` json
-"files.associations": {
-    "*.json": "jsonc",
-    ".eslintrc": "jsonc"
+解决favicon问题，服务端会出现（如果客户端缓存刷新的话也出现）
+1. 服务端找不到会定直接返回html
+2. 思路：在template中添加link icon，不过因为webpack还没有配置图片的，所以这个思路不采纳
+3. 使用[serve-favicon](https://www.npmjs.com/package/serve-favicon)
+  + npm i -D serve-favicon
+  + app.use(favicon(path.resolve(__dirname, 'favicon.ico')))
+
+每次修改服务端代码，都需要重新启动，太麻烦了
+解答：使用nodemon
+1. npm i -D nodemon
+2. 进行nodemon.json配置，直接在json中配置导致nodemon执行的时候报错
+```js
+{
+  "restartable": "rs", // 现在安装的这个版本已经不需要了，老版本还是需要的，否则配置了nodemon么有这一行修改无用
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules", // 包括node_modules下的所有文件以及node_modules
+    "client",
+    ".eslintrc",
+    "build"
+  ],
+  "env": {
+    "NODE_ENV": "development" // nodemon是不能NODE_ENV=development nodemon xxx.js这么使用的，要使用本行
+  },
+  "verbose": true, // 输出更多的信息查看报错结果
+  "ext": "js" // 只有js改变时候才触发
 }
 ```
+
+
+扩展：nodemon vs pm2
++ nodemon: 替代node进行更好的自动启动;
++ pm2: 添加--watch就跟nodemon一样了，不过更适合生产环境，因为有cpu使用率、RAM等的一些记录日志

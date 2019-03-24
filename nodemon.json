@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "client",
+    ".eslintrc",
+    "build"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "verbose": true,
+  "ext": "js"
+}

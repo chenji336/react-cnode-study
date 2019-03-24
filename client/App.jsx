@@ -13,7 +13,7 @@ export default class App extends React.Component {
     const { test } = this.state
     return (
       <div onClick={() => this.setState({ test: 2 })}>
-        112hello world!
+        hello world!
         {test}
       </div>
     )

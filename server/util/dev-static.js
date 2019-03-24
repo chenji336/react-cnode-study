@@ -1,5 +1,4 @@
 const axios = require('axios')
-const express = require('express')
 const webpack = require('webpack')
 const path = require('path')
 const MemoryFS = require('memory-fs')
