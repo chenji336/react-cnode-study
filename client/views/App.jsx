@@ -1,21 +1,20 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import Routes from '../config/router'
 
 export default class App extends React.Component {
-  constructor() {
-    super()
-    console.log('是否hot了')
-    this.state = {
-      test: 1,
-    }
+  componentDidMount() {
+    // do something
   }
 
   render() {
-    const { test } = this.state
-    return (
-      <div onClick={() => this.setState({ test: 2 })}>
-        hello world!
-        {test}
-      </div>
-    )
+    return [
+      <div key="banner">
+        <Link to="list">list</Link>
+        <br />
+        <Link to="detail">detail</Link>
+      </div>,
+      <Routes key="routes" />,
+    ]
   }
 }

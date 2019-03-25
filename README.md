@@ -167,3 +167,27 @@ client
 遇到的问题：
 >git commit -m 的时候报错，但是执行的时候却没有
 原因是运行时如果没有引用该组件是不会去检查的，而commit时候触发npm run lint钩子，所以全部会检查
+
+### 路由配置
+
+技巧：不想要外面有包裹的元素，可以使用数组，这样就都是兄弟元素了
+
+1. npm i -D react-router-dom
+  > react-router-dom需要以来react-router,如果没有安装依赖使用提示问题就需要安装，正常情况下会自动安装
+2. 在config/router.jsx中配置
+  + Switch 代表碰到一个就直接返回，不使用都匹配就都返回
+  + exact 完全匹配才返回
+3. Router进行Route、Link的包裹,要不然不可使用
+
+> 为什么react-router-dom需要依赖react-router?
+
+react-router理解成基础路由，react-router-dom适合浏览器，react-router-native适合移动端，所以了他们都继承了react-router，如果以后还有什么直接即成react-router就好，不需要重新编写重复代码了。
+
+> Redirect的使用？
+
+1. 在Route中使用：render={()=><Redirect to='xxx' />}，配合exact
+2. 直接使用： <Redirect from='aa' to='bb' />,不过需要配合Switch
+
+> render中不需要外部容器？
+
+return [<div></div>,<div></div>]

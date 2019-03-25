@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom'
 import React from 'react' // 这里没有使用到React为啥要写了，因为所有的jsx都会被编译成React.createElement
 import { AppContainer } from 'react-hot-loader'
+import { BrowserRouter } from 'react-router-dom'
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
 
 // hydrate 替换 render，这样可以比较客户端和服务端渲染是否有所不同（warn提示16.0以上版本需要）
@@ -11,7 +12,9 @@ const root = document.getElementById('root')
 const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不需要返回
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <BrowserRouter>
+        <Component />
+      </BrowserRouter>
     </AppContainer>,
     root,
   )
