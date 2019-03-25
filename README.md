@@ -191,3 +191,26 @@ react-router理解成基础路由，react-router-dom适合浏览器，react-rout
 > render中不需要外部容器？
 
 return [<div></div>,<div></div>]
+
+### store配置(1)
+
+本章主要是把redux和mobx进行了比较
+
+两个最简本代码的比较
++ [mobx](/Users/liulei/Documents/GitHub/REACT/react-redux-dva教学/status/mobx/simple-mobx/跟最简单redux比较.js)
++ [redux](/Users/liulei/Documents/GitHub/REACT/react-redux-dva教学/status/redux/index-base.js)
+[详细的比较](https://juejin.im/post/5a7fd72c5188257a766324ae)
+mobx是由多个store组成的，使用的时候在把相应的store注入到各个组件，
+而redux只有一个store，通过connect进行关联mapStateToProps,mapDispatchToProps
+
+mobx优点：
++ 更加的简洁，类似于vue的vuex。只需要observable和action就可以做redux的基本事情。
++ 效率更高，可以直接修改初始值属性，而不是返回一个新的初始值
+mobx缺点：
+非严格模式下大家可以随意更改属性，而不需要通过action
+
+redux优点：更加的规范流程化
+redux缺点： 繁琐
+
+
+
