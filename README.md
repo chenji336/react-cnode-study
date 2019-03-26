@@ -192,7 +192,7 @@ react-router理解成基础路由，react-router-dom适合浏览器，react-rout
 
 return [<div></div>,<div></div>]
 
-### store配置(1)
+### store配置(1)-概念对比redux
 
 本章主要是把redux和mobx进行了比较
 
@@ -210,7 +210,29 @@ mobx缺点：
 非严格模式下大家可以随意更改属性，而不需要通过action
 
 redux优点：更加的规范流程化
-redux缺点： 繁琐
+redux缺点：繁琐
 
+### store配置（2）-使用
 
+使用mobx以及装饰器：
+1. npm i -D babel-preset-stage-1 babel-plugin-transform-decorator-legacy
+  > stage-1是不包含插件tranform-decorators-legacy的
+2. npm i -S mobx mobx-react
+3. 每个使用的地方都创建一个Store，比如全局的就是app-state.js
+  > 使用class+decorator是比较好的实践
+注意点：mobx5.x版本使用到proxy，会不兼容ie11版本，可以降级到4.x
+
+可以使用babel-node直接执行client/store/app-state.js,查看效果
+
+在react中使用mobx
+1. import {Provider} from 'mobx-react'
+2. Provider加载放在hot的下面一层，并且属性appState={appState}
+3. class上面@inject('appState')：注入props； @observer：监听后续的改变
+  > 如果export default配合装饰器会报错，记得在.eslintrc中配置
+
+> 发现没有使用babel-plugin-transform-class-property也可以使用在class使用static和箭头函数，这个后续要看看具体是啥原因
+
+因为stage-1包含了babel-plugin-transform-class-property,react-webpack里面使用的是stage-3，如果不配合-class-property使用，使用static以及class中的箭头函数是会报错的
+
+> 在本章中我们有很多测试无用的代码，后续都可以删除
 

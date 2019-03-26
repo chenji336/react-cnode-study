@@ -3,9 +3,11 @@
         ["es2015", {
             "loose": true
         }],
-        "react"
+        "react",
+        "stage-1"
     ],
     "plugins": [
+        "transform-decorators-legacy", // 一定要写在第一行，要不然会出现一些问题
         "react-hot-loader/babel"
     ]
 }
