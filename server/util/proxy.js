@@ -1,7 +1,7 @@
 const axios = require('axios')
 const queryString = require('query-string') // 对象转成a=1&&b=2
 
-const baseUrl = 'http://cnodejs.org/api/v1'
+const baseUrl = 'https://cnodejs.org/api/v1'
 
 module.exports = function(req, res, next) {
   const path = req.path // app.use('/api) 中api不会包含的
@@ -17,20 +17,22 @@ module.exports = function(req, res, next) {
   }
 
   const query = Object.assign({}, req.query, {
-    accessToken: needAccessToken && req.method === 'GET' ? accessToken : ''
+    accesstoken: needAccessToken && req.method === 'GET' ? user.accessToken : ''
   })
   if (query.needAccessToken) {
     delete query.needAccessToken
   }
-
+  console.log('method:', queryString.stringify(Object.assign({}, req.body, {
+    accesstoken: needAccessToken && req.method === 'POST' ? user.accessToken : ''
+  })))
   axios(`${baseUrl}${path}`, {
     method: req.method, // 获取方法
     params: query,
-    body: queryString.stringify(Object.assign({}, req.body, {
-      accessToken: needAccessToken && req.method === 'POST' ? accessToken : ''
+    data: queryString.stringify(Object.assign({}, req.body, {
+      accesstoken: needAccessToken && req.method === 'POST' ? user.accessToken : ''
     })),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded' // cnode有的接口使用application/json会出现问题
+      'Content-Type': 'application/x-www-form-urlencoded' // cnode有的接口使用application/json会出现问题
     }
   })
     .then(resp => {
@@ -42,6 +44,7 @@ module.exports = function(req, res, next) {
     })
     .catch(err => { // 3xx、4xx、5xx跳转到这里
       if (err.response) {
+        console.log('err.response:', err.response)
         res.status(500).send(err.response.data)
       } else {
         res.status(500).send({

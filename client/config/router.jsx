@@ -6,6 +6,7 @@ import {
 
 import TopicList from '../views/topic-list'
 import TopicDetail from '../views/topic-detail'
+import TestApi from '../views/test/api-test'
 
 // 如果没有
 export default () => [
@@ -19,4 +20,5 @@ export default () => [
   />,
   <Route path="/list" exact component={TopicList} key="list" />,
   <Route path="/detail" exact component={TopicDetail} key="detail" />,
+  <Route path="/test" exact component={TestApi} key="test" />,
 ]

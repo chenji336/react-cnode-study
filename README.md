@@ -251,3 +251,17 @@ redux缺点：繁琐
 主要学习的是插件的使用：
 body-parser、express-session、query-string的使用，相应的可以查看node-study/plugin
 
+### 调试接口代理
+
+添加一个路由页面test.api.jsx进行调试，主要测试：无accessToken接口、login、有accessToken接口
+
+问题：服务端渲染启动的时候，如果访问localhost:3333会报错，err: Error: Invariant failed: You should not use <Link> outside a <Router>
+这个问题下面会解决，所以现在页面使用的化，需要使用代理
+  ```js
+  proxy: {
+    '/api':'http://localhost:3333' // localhost:3333/api代理到localhost:8888/api上面
+  }
+  ```
+这个问题还是要解决的，都服务端渲染了还用啥proxy啊～后续修复
+
+axios的post请求主体是 data， fetch的post请求主体是 body。不要弄混了，要不然测试bug会花很多时间

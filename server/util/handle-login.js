@@ -1,7 +1,7 @@
 const router = require('express')() // 3.x是app.router,4.x不建议这么使用了
 const axios = require('axios')
 
-const baseUrl = 'https://cnodejs.org/api/v1 '
+const baseUrl = 'https://cnodejs.org/api/v1'
 
 // 如果 login 不是 /login 会怎样,不影响
 // 就算不用router也是需要使用express.post的，因为要添加login路由
@@ -29,7 +29,7 @@ router.post('/login', function(req, res, next) {
       if (err.response) { // 服务端返回的是2xx以外的数据
         res.json({
           success: false,
-          data: err.response.data
+          data: err.response.data // 如果返回的是err.response，因为太大，前端是看不到信息的（所以不要忘了加.data)
         })
       } else { // 把错误抛给下一个中间件
         next(err)
