@@ -3,11 +3,26 @@ const ReactSSR = require('react-dom/server')
 const path = require('path')
 const fs = require('fs')
 const favicon = require('serve-favicon')
+const bodyParser = require('body-parser')
+const session = require('express-session')
 const app = express();
 const isDev = process.env.NODE_ENV === 'development'
 // console.log('isDev', isDev)
 
 app.use(favicon(path.resolve(__dirname, '../favicon.ico')))
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(session({
+  secret: 'react cnode class', // 加密的key
+  name: 'tid', // cookie保存的名字
+  resave: false, // 不需要重复保存cookie
+  saveUninitialized: false, // 初始化时候不需要保存，默认一开始不会传送cookie给浏览器
+  maxAge: 10 * 1000 * 60, // 保持10分钟，不加rolling那么就算操作也是十分钟
+}))
+
+app.use('/api/user', require('./util/handle-login'))
+app.use('/api', require('./util/proxy')) // 斜杠不要忘了
 
 if (!isDev) {
     const serverEntry = require('../dist/server-entry.js').default // export的是default，require需要.default

@@ -30,7 +30,7 @@ setInterval(() => {
 }, 1000)
 
 autorun(() => {
-  console.log(`${appState.name} say count is ${appState.count}`)
+  // console.log(`${appState.name} say count is ${appState.count}`)
 })
 
 export default appState

@@ -236,3 +236,18 @@ redux缺点：繁琐
 
 > 在本章中我们有很多测试无用的代码，后续都可以删除
 
+### Cnode API代理实现
+
+实现了两个代理：login和其他接口
+
+发现/api/user/login指向login,还需要保存相应的session，没有的则默认401.
+
+发现/api开头，则获取后面的path然后拼装成api去调用.
+1. 判断是否有session，没有则401
+2. get请求和post请求包装一下，query和body都加上
+  > 使用application/x-www-form-urlencoded是因为有的接口application/json会报错。但是前端发送的时候是可以使用application/json
+3. 发送接收到的相应的请求给前端
+
+主要学习的是插件的使用：
+body-parser、express-session、query-string的使用，相应的可以查看node-study/plugin
+
