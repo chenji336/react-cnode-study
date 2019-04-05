@@ -2,10 +2,10 @@ import {
   observable,
   computed,
   action,
-  autorun,
 } from 'mobx'
 
-export class AppState {
+// 服务端渲染需要在外面每次都创建新的实例，所以这里直接返回class（之前版本是返回实例的）
+export default class AppState {
   @observable count = 0
 
   @observable name = 'chenji'
@@ -23,14 +23,4 @@ export class AppState {
   }
 }
 
-const appState = new AppState()
-
-setInterval(() => {
-  appState.add()
-}, 1000)
-
-autorun(() => {
-  // console.log(`${appState.name} say count is ${appState.count}`)
-})
-
-export default appState
+export const appState = new AppState() // 留着对比测试：不每次新建的情况下热更新

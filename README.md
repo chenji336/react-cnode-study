@@ -255,8 +255,9 @@ body-parser、express-session、query-string的使用，相应的可以查看nod
 
 添加一个路由页面test.api.jsx进行调试，主要测试：无accessToken接口、login、有accessToken接口
 
-问题：服务端渲染启动的时候，如果访问localhost:3333会报错，err: Error: Invariant failed: You should not use <Link> outside a <Router>
+>问题：服务端渲染启动的时候，如果访问localhost:3333会报错，err: Error: Invariant failed: You should not use <Link> outside a <Router>
 这个问题下面会解决，所以现在页面使用的化，需要使用代理
+
   ```js
   proxy: {
     '/api':'http://localhost:3333' // localhost:3333/api代理到localhost:8888/api上面
@@ -265,3 +266,29 @@ body-parser、express-session、query-string的使用，相应的可以查看nod
 这个问题还是要解决的，都服务端渲染了还用啥proxy啊～后续修复
 
 axios的post请求主体是 data， fetch的post请求主体是 body。不要弄混了，要不然测试bug会花很多时间
+
+### 服务端渲染优化-1
+
+上一章问题：加入router和store后，服务端渲染出现问题，如何解决？
+
+>如果不使用开发时候服务端的代码？那是不是就不需要在乎了？
+
+  不是，因为生成的server-entry还是有router和store的代码在里面
+
+> 解决路由跳转问题
++  在server-entry.js中添加react-router-dom专门为服务端渲染的router的StaticRouter
+  > 解决了之前的报错，但是服务端<!--app>被替换成了空，没有数据
+
+> 解决服务端store问题
+
+  请求两次，浪费（没有理解老师的意思）
+
+现在实现的功能：
+1. 可以进行路由的跳转
+2. 首次的mobx-state可以访问到
+
+问题：
+1. 如果mobx 的state进行了更改的话怎么通知服务端重新进行渲染
+2. 如果路由跳转的话在哪里进行跳转
+
+

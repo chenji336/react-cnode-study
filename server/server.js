@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const app = express();
 const isDev = process.env.NODE_ENV === 'development'
-// console.log('isDev', isDev)
+console.log('isDev', isDev)
 
 app.use(favicon(path.resolve(__dirname, '../favicon.ico')))
 
@@ -26,6 +26,7 @@ app.use('/api', require('./util/proxy')) // 斜杠不要忘了
 
 if (!isDev) {
     const serverEntry = require('../dist/server-entry.js').default // export的是default，require需要.default
+    const createStoreMap = require('../dist/server-entry.js').createStoreMap // export的是default，require需要.default
 
     const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8')
     // 没有use('/public')，那么访问的dist/app.js 等价 http://localhost:3333/app.js
@@ -34,7 +35,9 @@ if (!isDev) {
     // 上面的public执行了就不会执行这里的*，也就是说静态文件不会进入这里
     app.get('*', function (req, res) {
         console.log('req.path:', req.path)
-        const appString = ReactSSR.renderToString(serverEntry)
+        const routerContext = {}
+        const app = serverEntry(createStoreMap(), routerContext, req.url)
+        const appString = ReactSSR.renderToString(app)
         // console.log('appString:', appString)
         res.send(template.replace('<!--app-->', appString))
     })

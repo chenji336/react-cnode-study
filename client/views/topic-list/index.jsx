@@ -4,7 +4,7 @@ import {
   observer,
 } from 'mobx-react'
 import PropTypes from 'prop-types'
-import { AppState } from '../../store/app-state'
+import AppState from '../../store/app-state'
 
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
 @inject('appState') @observer
@@ -25,7 +25,7 @@ export default class TopicList extends React.Component {
 
   test = () => { // 只是测试箭头函数是否可用
     // do something
-    console.log(1)
+    console.log(11)
   }
 
   changeName(event) {

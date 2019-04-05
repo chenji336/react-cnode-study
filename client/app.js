@@ -4,7 +4,7 @@ import { AppContainer } from 'react-hot-loader'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
-import appState from './store/app-state'
+import AppState from './store/app-state'
 
 // hydrate 替换 render，这样可以比较客户端和服务端渲染是否有所不同（warn提示16.0以上版本需要）
 // 客户端使用hydrate会出现 Expected server HTML to contain a matching <div> in <div>.
@@ -15,7 +15,8 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
   // **AppContainer一定要放在最顶层
   ReactDOM.render(
     <AppContainer>
-      <Provider appState={appState}>
+      {/* new AppState是为了服务端渲染做的，但是这样每次hot时候就会重置appstate内容，看看后续是否有解决方案？ */}
+      <Provider appState={new AppState()}>
         <BrowserRouter>
           <Component />
         </BrowserRouter>
