@@ -7,6 +7,7 @@ module.exports = webpackMerge(baseConfig, {
     entry: {
         app: path.join(__dirname, '../client/server-entry.js')
     },
+     externals: Object.keys(require('../package.json').dependencies), // 不要打包所有的package.json里面的，服务端渲染会使用require进行引用
     output: {
         filename: 'server-entry.js',
         libraryTarget: 'commonjs2'

@@ -7,9 +7,11 @@ const proxy = require('http-proxy-middleware')
 const asyncBootstrap = require('react-async-bootstrapper')
 const ejs = require('ejs')
 
-const Module = module.constructor
-
 const serverConfig = require('../../build/webpack.config.server')
+
+// const Module = module.constructor
+const NativeModule = require('module') // 本地的module
+const vm = require('vm') // 执行代码的环境，理解成eval
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
@@ -49,6 +51,22 @@ const getStoreState = (stores) => {
   }, {})
 }
 
+
+const getModuleFromString = (bundle, filename) => {
+  const m = {
+    exports: {}
+  }
+
+  const wrapper = NativeModule.wrap(bundle)  // 理解成一个函数
+  const script = new vm.Script(wrapper, { // 执行这个函数的环境
+    filename,
+    displayErrors: true
+  })
+  const result = script.runInThisContext()
+  result.call(m.exports, m.exports, require, m) // 这里的require就是本地的rquire，所以可以使用
+  return m
+}
+
 const mfs = new MemoryFS
 const serverCompiler = webpack(serverConfig)
 serverCompiler.outputFileSystem = mfs // 操作文件都在缓存中进行，更快；api跟node的fs一样
@@ -68,8 +86,9 @@ serverCompiler.watch({}, (err, stats) => {
   const bundle = mfs.readFileSync(bundlePath, 'utf-8') // 转成string,内容：module.exports=xxxxxx(不要漏了utf-8，有些会转成buff)
 
   // 下面三行代码等价 module.export = serverBundle,然后在require('serverBundle')。为啥不直接用bundle，因为bundle格式是module.exports以及里面很多压缩代码
-  const m = new Module()
-  m._compile(bundle, 'server-entry.js') // 记住给个名称，否则会报错（ The "path" argument must be of type string. Received type undefined）
+  // const m = new Module()
+  // m._compile(bundle, 'server-entry.js') // 记住给个名称，否则会报错（ The "path" argument must be of type string. Received type undefined）
+  const m = getModuleFromString(bundle, 'server-entry.js')
   serverBundle = m.exports.default // exort 导出默认，在require中需要.default
   createStoreMap = m.exports.createStoreMap
   // console.log('serverBundle:', serverBundle) // 出来的是一个对象，需要renderToString解析成string
@@ -98,6 +117,7 @@ module.exports = function (app) {
           }
           const appString = ReactSSR.renderToString(app) // 放在外面第一次会出现问题
           const state = getStoreState(stores) // 把state转成json格式，stores默认的是getter和setter方法
+
           console.log('stores.appState.count:', stores.appState.count)
           console.log('state:', state)
           console.log('appString:', appString)

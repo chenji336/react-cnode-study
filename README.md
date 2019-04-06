@@ -316,3 +316,11 @@ axios的post请求主体是 data， fetch的post请求主体是 body。不要弄
 
 > 未解决
 SEO和TITLE问题
+
+### 服务端问题解决mbox的warning
+
+mbox的warning：每次刷新的时候都会重新打包server-entry.js，这样就会形成多个mbox的实例，导致错误（现在版本没有，课程中是有提示的）
+解决方案：
+1. webpack.externals 把package.json的包都去掉，服务端默认会使用require引入
+  > (new Module()).compile(bundle,'server-entry.js')使用reuiqre会报错
+2. 替换掉之前的编译模式，改用可以获取的方式（vm NativeModule require)
