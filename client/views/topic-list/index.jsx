@@ -13,6 +13,10 @@ export default class TopicList extends React.Component {
     appState: PropTypes.instanceOf(AppState), // 如果只是PropTypes.object则会报错，使用这种相当于匹配这种类型
   }
 
+  state = {
+    x: 1,
+  }
+
   constructor() {
     super()
     this.changeName = this.changeName.bind(this) // 如果没使用箭头函数，需要使用bind方式绑定上下文
@@ -21,24 +25,46 @@ export default class TopicList extends React.Component {
   componentDidMount() {
     // do something
     this.test()
+    // this.props.appState.count = 3 // 使用mobx这里也是异步改变的
   }
 
   test = () => { // 只是测试箭头函数是否可用
     // do something
-    console.log(11)
+    console.log(11) // 这里还是显示在浏览器中
+  }
+
+  // 可以理解成react-async-bootstrapper的生命周期了
+  // 命名成bootstrap或则asyncBootstrap都可以,不过推荐是bootstrap
+  bootstrap() {
+    console.log('asyncStrap1') // 这个log会在服务端显示，浏览器不显示
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.props.appState.count = 3 // 一般不推荐这么修改
+        this.setState({ // 这一块服务端渲染还是没有解决的
+          x: 2,
+        })
+        resolve() // 需要返回true，否则不触发react-async-bootstrapper（最新版本的没有发现这个问题）
+      }, 1000);
+    })
   }
 
   changeName(event) {
     // this.props.appState.name = event.target.value // 不推荐直接更改，这样就不会有记录了，可以通过action来更改
     this.props.appState.change(event.target.value)
+    this.setState({
+      x: 2,
+    })
+    console.log(event.target.value)
   }
 
   render() {
     const { appState } = this.props
+    const { x } = this.state
     return (
       <div>
         <input onChange={this.changeName} />
         <span>{appState.msg}</span>
+        <span>{x}</span>
       </div>
     )
   }

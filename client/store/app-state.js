@@ -6,9 +6,14 @@ import {
 
 // 服务端渲染需要在外面每次都创建新的实例，所以这里直接返回class（之前版本是返回实例的）
 export default class AppState {
-  @observable count = 0
+  constructor({ name, count } = { name: 'chenji', count: 0 }) {
+    this.name = name
+    this.count = count
+  }
 
-  @observable name = 'chenji'
+  @observable count
+
+  @observable name
 
   @computed get msg() {
     return `${this.name} say count is ${this.count}`
@@ -20,6 +25,14 @@ export default class AppState {
 
   @action change(name) {
     this.name = name
+  }
+
+  // 服务端渲染使用
+  toJson() {
+    return {
+      name: this.name,
+      count: this.count,
+    }
   }
 }
 

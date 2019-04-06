@@ -291,4 +291,28 @@ axios的post请求主体是 data， fetch的post请求主体是 body。不要弄
 1. 如果mobx 的state进行了更改的话怎么通知服务端重新进行渲染
 2. 如果路由跳转的话在哪里进行跳转
 
+### 服务端渲染优化-2
 
+>路由跳转
+
+通过routerContext.url来获取是不是要进行跳转，如果需要就服务端 status 302 然后跳转（设置header头的Location）
+
+> mobx-state的改变
+1. react-async-bootstrapper可以在服务端进行监听，client代码里面进行修改
+  >初始化使用还有bug，服务端state修改了，但是前端还是没有修改
+2. 获取到的store是getter和setter格式，转成json格式
+  >每次都需要刷新两次才能正确，否则服务端显示xxx不是function？后续有答案在解答
+3. 通过模板代码把转成的json格式替换到html中去
+  + ejs，因为webpack也会解析ejs，所以需要<%%- appString %>
+    + 默认的使用就是html 中使用htmlWebpackPlugin.options.title(重点是options)
+  + window.__INITIAL_STATE__ 这种命名就是为了不重复
+  + 服务端的state转成string，然后替换ejs中内容
+  + app-state添加constructor，里面的参数就是初始值 window.__INITIAL_STATE__
+
+思考：服务端渲染的主要解决什么
+1. 渲染速度
+2. SEO
+>跟是否可以触发事件是无关的，比如 topic-list 里面，如果只是使用服务端渲染没有引入 appxxxx.js，那么是不会触发 change 事件的
+
+> 未解决
+SEO和TITLE问题
