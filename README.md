@@ -1,3 +1,5 @@
+
+[TOC]
 # react-cnode-study
 从0-1的学习react的服务端渲染，不过使用的是webpack的3.x版本，先按照这些来使用，后续可以自己在进行改造
 [学习来源](https://coding.imooc.com/class/chapter/161.html#Anchor)
@@ -346,3 +348,15 @@ next是发到下一个中间件，使用app.use((error, req, res, next)=>{})来�
 serverBundle不存在情况下，提示客户等下再次进行刷新（这个只有开发环境才会遇到，也是之前时常出现的问题）
 
 **npm start 之前既然不知道为啥，原来只有npm run start才可以npm start**
+
+## 业务开发
+
+### React16 介绍
+
+新特性：
+1. error Bundle,如果没有使用source-map的话，这个可以帮忙快速定位到错误代码
+2. New render return types,可以不需要外层的dom，直接[<p>xxx<p>,<p>yyy</p>]
+3. Portals,可以在一个dom节点下插入组件。应用：弹窗插入到body中
+4. Better server-side rendering,
+  + 如果服务端渲染之后客户端不进行再次渲染，可以使用React.hyrate
+  + 如果是顺序渲染，可以使用streming形式，这样可以先显示一部分，后续加载之后在渲染（我们使用的不是，因为我们不是顺序相关）
