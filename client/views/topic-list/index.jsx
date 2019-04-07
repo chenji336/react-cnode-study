@@ -4,6 +4,7 @@ import {
   observer,
 } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { Helmet } from 'react-helmet'
 import AppState from '../../store/app-state'
 
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
@@ -36,6 +37,7 @@ export default class TopicList extends React.Component {
   // 可以理解成react-async-bootstrapper的生命周期了
   // 命名成bootstrap或则asyncBootstrap都可以,不过推荐是bootstrap
   bootstrap() {
+    // 执行优先componentDidMount,服务端先渲染然后在加载相应的appxxx.js
     console.log('asyncStrap1') // 这个log会在服务端显示，浏览器不显示
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -62,6 +64,10 @@ export default class TopicList extends React.Component {
     const { x } = this.state
     return (
       <div>
+        <Helmet>
+          <title>This is topic list</title>
+          <meta name="description" content="this is description" />
+        </Helmet>
         <input onChange={this.changeName} />
         <span>{appState.msg}</span>
         <span>{x}</span>

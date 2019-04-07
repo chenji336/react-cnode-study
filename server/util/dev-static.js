@@ -4,8 +4,9 @@ const path = require('path')
 const MemoryFS = require('memory-fs')
 const ReactSSR = require('react-dom/server')
 const proxy = require('http-proxy-middleware')
-const asyncBootstrap = require('react-async-bootstrapper')
+const asyncBootstrap = require('react-async-bootstrapper') // 之前需要.default,现在版本不需要
 const ejs = require('ejs')
+const Helmet = require('react-helmet').default
 
 const serverConfig = require('../../build/webpack.config.server')
 
@@ -35,8 +36,8 @@ const getTemplate = () => {
                   </script>
               </html>
         `;
-        resolve(noJsHtml)
-        // resolve(res.data)
+        // resolve(noJsHtml)
+        resolve(res.data)
       })
       .catch(reject)
   })
@@ -115,8 +116,10 @@ module.exports = function (app) {
             res.end()
             return
           }
-          const appString = ReactSSR.renderToString(app) // 放在外面第一次会出现问题
+
           const state = getStoreState(stores) // 把state转成json格式，stores默认的是getter和setter方法
+          const appString = ReactSSR.renderToString(app) // 放在外面第一次会出现问题
+          const helmet = Helmet.rewind() // 获取组件里面的helmet内容
 
           console.log('stores.appState.count:', stores.appState.count)
           console.log('state:', state)
@@ -124,6 +127,10 @@ module.exports = function (app) {
           const html = ejs.render(template, {
             appString: appString,
             initialState: JSON.stringify(state), // 如果没有JSON.stringify，那么模板中的就是[Object Object]
+            title: helmet.title.toString(),
+            meta: helmet.meta.toString(),
+            style: helmet.style.toString(),
+            link: helmet.link.toString(),
           })
           res.send(html)
         })

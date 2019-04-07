@@ -324,3 +324,15 @@ mbox的warning：每次刷新的时候都会重新打包server-entry.js，这样
 1. webpack.externals 把package.json的包都去掉，服务端默认会使用require引入
   > (new Module()).compile(bundle,'server-entry.js')使用reuiqre会报错
 2. 替换掉之前的编译模式，改用可以获取的方式（vm NativeModule require)
+
+### 解决SEO问题
+
+SEO：主要是title和meta
+<title>这个是需要被seo的标题</title>
+<meta name='描述' content='具体的描述信息' />
+
+参照react-async-bootstrapper，在组件里面编写具体的内容，然后server里面可以获取到，然后渲染到ejs中
+
+我们选用react-helmet
+1. 在client情况下也可以使用，只是也是后续渲染上去的
+2. 在server端使用，可以Helmet.rewind(),然后相应的属性.toString()
