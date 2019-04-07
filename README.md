@@ -336,3 +336,13 @@ SEO：主要是title和meta
 我们选用react-helmet
 1. 在client情况下也可以使用，只是也是后续渲染上去的
 2. 在server端使用，可以Helmet.rewind(),然后相应的属性.toString()
+
+### 将服务端渲染用于生产环境
+
+把公用代码提取出来，放在server-render.js中
+
+next是发到下一个中间件，使用app.use((error, req, res, next)=>{})来统一处理错误
+
+serverBundle不存在情况下，提示客户等下再次进行刷新（这个只有开发环境才会遇到，也是之前时常出现的问题）
+
+**npm start 之前既然不知道为啥，原来只有npm run start才可以npm start**

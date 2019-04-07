@@ -31,7 +31,7 @@ export default class TopicList extends React.Component {
 
   test = () => { // 只是测试箭头函数是否可用
     // do something
-    console.log(11) // 这里还是显示在浏览器中
+    console.log(1) // 这里还是显示在浏览器中
   }
 
   // 可以理解成react-async-bootstrapper的生命周期了

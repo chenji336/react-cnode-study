@@ -2,13 +2,9 @@ const axios = require('axios')
 const webpack = require('webpack')
 const path = require('path')
 const MemoryFS = require('memory-fs')
-const ReactSSR = require('react-dom/server')
 const proxy = require('http-proxy-middleware')
-const asyncBootstrap = require('react-async-bootstrapper') // 之前需要.default,现在版本不需要
-const ejs = require('ejs')
-const Helmet = require('react-helmet').default
-
 const serverConfig = require('../../build/webpack.config.server')
+const serverRender = require('../util/server-render')
 
 // const Module = module.constructor
 const NativeModule = require('module') // 本地的module
@@ -43,16 +39,6 @@ const getTemplate = () => {
   })
 }
 
-const getStoreState = (stores) => {
-
-  return Object.keys(stores).reduce((result, storeName) => {
-    console.log('storeName:', storeName)
-    result[storeName] = stores[storeName].toJson()
-    return result
-  }, {})
-}
-
-
 const getModuleFromString = (bundle, filename) => {
   const m = {
     exports: {}
@@ -72,7 +58,7 @@ const mfs = new MemoryFS
 const serverCompiler = webpack(serverConfig)
 serverCompiler.outputFileSystem = mfs // 操作文件都在缓存中进行，更快；api跟node的fs一样
 
-let serverBundle, createStoreMap
+let serverBundle
 serverCompiler.watch({}, (err, stats) => {
   console.log('watch-修改client下的组件会进入我这里')
   if (err) throw err
@@ -90,8 +76,7 @@ serverCompiler.watch({}, (err, stats) => {
   // const m = new Module()
   // m._compile(bundle, 'server-entry.js') // 记住给个名称，否则会报错（ The "path" argument must be of type string. Received type undefined）
   const m = getModuleFromString(bundle, 'server-entry.js')
-  serverBundle = m.exports.default // exort 导出默认，在require中需要.default
-  createStoreMap = m.exports.createStoreMap
+  serverBundle = m.exports // exort 导出默认，在require中需要.default
   // console.log('serverBundle:', serverBundle) // 出来的是一个对象，需要renderToString解析成string
 })
 
@@ -100,43 +85,14 @@ module.exports = function (app) {
     target: 'http://localhost:8888'
   }))
   // app.use('/public', express.static(path.join(__dirname, '../dist'))) // express.static找的是本地的
-  app.get('*', (req, res) => {
+  app.get('*', (req, res, next) => {
+    if (!serverBundle) {
+      return res.send('waiting for compile, referesh later')
+    }
     getTemplate()
       .then(template => {
-        const routerContext = {}
-        const stores = createStoreMap()
-        const app = serverBundle(stores, routerContext, req.url)
-
-        // mobx-state、state以及方法触发的监听
-        asyncBootstrap(app).then(d => {
-          // 进行renderToString之后routerContext才会获取到值
-          // 主要进行路由跳转，react表现就是redirect
-          if (routerContext.url) {
-            res.status(302).setHeader('Location', routerContext.url)
-            res.end()
-            return
-          }
-
-          const state = getStoreState(stores) // 把state转成json格式，stores默认的是getter和setter方法
-          const appString = ReactSSR.renderToString(app) // 放在外面第一次会出现问题
-          const helmet = Helmet.rewind() // 获取组件里面的helmet内容
-
-          console.log('stores.appState.count:', stores.appState.count)
-          console.log('state:', state)
-          console.log('appString:', appString)
-          const html = ejs.render(template, {
-            appString: appString,
-            initialState: JSON.stringify(state), // 如果没有JSON.stringify，那么模板中的就是[Object Object]
-            title: helmet.title.toString(),
-            meta: helmet.meta.toString(),
-            style: helmet.style.toString(),
-            link: helmet.link.toString(),
-          })
-          res.send(html)
-        })
+        return serverRender(serverBundle, template, req, res)
       })
-      .catch(err => {
-        console.error('err:', err)
-      })
+      .catch(next)
   })
 }
