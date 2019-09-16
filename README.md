@@ -68,7 +68,7 @@ webpack默认支持js的
     + 安装react-hot-loader
     + webpack.congif entry中加入react-hot-loader/patch
     + 配置.babelrc,plugins中添加react-hot-loader/babel，如果全是es5的话可以不使用babel，因为jsx有可能使用es6和react语法
-    + app.js使用module.hot.accept监听App.jsx重新render（好像是使用了websocket推送），AppContainer进行包裹这样state状态才可以   保留
+    + app.js使用module.hot.accept监听App.jsx重新render（好像是使用了websocket推送），AppContainer进行包裹这样state状态才可以保留
 遇到的坑：
     为啥public后面也要斜杠，因为热更新的js也会使用这个publicPath，如果没有/，则public080999.js,正常应该是public/080999.js，可以打开chrome-network-preserve log进行查看
 
@@ -175,7 +175,7 @@ client
 技巧：不想要外面有包裹的元素，可以使用数组，这样就都是兄弟元素了
 
 1. npm i -D react-router-dom
-  > react-router-dom需要以来react-router,如果没有安装依赖使用提示问题就需要安装，正常情况下会自动安装
+  > react-router-dom需要依赖react-router,如果没有安装依赖使用提示问题就需要安装，正常情况下会自动安装
 2. 在config/router.jsx中配置
   + Switch 代表碰到一个就直接返回，不使用都匹配就都返回
   + exact 完全匹配才返回

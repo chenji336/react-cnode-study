@@ -11,7 +11,7 @@ import AppState from './store/app-state'
 // ReactDOM.hydrate(<App />, document.getElementById('root')) // 不建议放在documeng.body上面，会有warn提示的
 
 const root = document.getElementById('root')
-const initialState = window.__INITIAL_STATE__  || {}// eslint-disable-line
+const initialState = window.__INITIAL_STATE__  || {} // eslint-disable-line
 const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不需要返回
   // **AppContainer一定要放在最顶层
   ReactDOM.hydrate(
