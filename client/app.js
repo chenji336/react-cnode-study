@@ -17,6 +17,7 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
   ReactDOM.hydrate(
     <AppContainer>
       {/* new AppState是为了服务端渲染做的，但是这样每次hot时候就会重置appstate内容，看看后续是否有解决方案？ */}
+      {/* 发现直接使用 appState 也没有影响，后续看是不是自己遗漏了什么 */}
       <Provider appState={new AppState(initialState.appState)}>
         <BrowserRouter>
           <Component />
@@ -28,7 +29,7 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
 }
 
 render(App)
-console.log('module.hot:', module.hot)
+// console.log('module.hot:', module.hot)
 // module.hot.accept(); // 简写成这种现在也能成功，不知道是否有副作用
 if (module.hot) {
   module.hot.accept('./views/App', () => {

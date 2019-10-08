@@ -10,7 +10,7 @@ import AppState from '../../store/app-state'
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
 @inject('appState') @observer
 export default class TopicList extends React.Component {
-  static propTypes = { // 说明还是有些浏览器不需要使用transofrm-class-property，如果需要在添加上
+  static propTypes = { // ~~说明还是有些浏览器不需要使用transofrm-class-property，如果需要在添加上~~
     appState: PropTypes.instanceOf(AppState), // 如果只是PropTypes.object则会报错，使用这种相当于匹配这种类型
   }
 

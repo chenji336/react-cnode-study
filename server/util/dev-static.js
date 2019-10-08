@@ -62,7 +62,7 @@ let serverBundle
 serverCompiler.watch({}, (err, stats) => {
   console.log('watch-修改client下的组件会进入我这里')
   if (err) throw err
-  stats = stats.toJson() // 需要验证下(当webpack专门的stats文件需要toJSON，记一下)
+  stats = stats.toJson() // 需要验证下(当webpack专门的stats文件需要toJSON，记一下)；转成json对象才好执行下面两个步骤
   stats.errors.forEach(err => console.error(err))
   stats.warnings.forEach(warn => console.warn(warn))
 
