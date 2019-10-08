@@ -368,3 +368,7 @@ serverBundle不存在情况下，提示客户等下再次进行刷新（这个�
 4. Better server-side rendering,
   + 如果服务端渲染之后客户端不进行再次渲染，可以使用React.hyrate
   + 如果是顺序渲染，可以使用streming形式，这样可以先显示一部分，后续加载之后在渲染（我们使用的不是，因为我们不是顺序相关）
+
+### material 使用
+
+安装注意：按照视频必须安装 `npm i -S material-ui@1.0.0-beta.23`
