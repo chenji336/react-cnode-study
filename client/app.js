@@ -3,15 +3,25 @@ import React from 'react' // 这里没有使用到React为啥要写了，因为�
 import { AppContainer } from 'react-hot-loader'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
+import { MuiThemeProvider, createMuiTheme } from 'material-ui'
+import { pink, lightBlue } from 'material-ui/colors'
+// import { pink, lightBlue } from 'material-ui/colo'
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
 import AppState from './store/app-state'
 
+const theme = createMuiTheme({
+  palette: {
+    primary: pink,
+    accent: lightBlue,
+    type: 'light',
+  },
+})
 // hydrate 替换 render，这样可以比较客户端和服务端渲染是否有所不同（warn提示16.0以上版本需要）.服务端渲染效率更高
 // 客户端使用hydrate会出现 Expected server HTML to contain a matching <div> in <div>.
 // ReactDOM.hydrate(<App />, document.getElementById('root')) // 不建议放在documeng.body上面，会有warn提示的
 
 const root = document.getElementById('root')
-const initialState = window.__INITIAL_STATE__  || {} // eslint-disable-line
+const initialState = window.__INITIAL_STATE__ || {} // eslint-disable-line
 const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不需要返回
   // **AppContainer一定要放在最顶层
   ReactDOM.hydrate(
@@ -20,7 +30,9 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
       {/* 发现直接使用 appState 也没有影响，后续看是不是自己遗漏了什么 */}
       <Provider appState={new AppState(initialState.appState)}>
         <BrowserRouter>
-          <Component />
+          <MuiThemeProvider theme={theme}>
+            <Component />
+          </MuiThemeProvider>
         </BrowserRouter>
       </Provider>
     </AppContainer>,
