@@ -15,23 +15,23 @@ const getTemplate = () => {
     axios.get('http://localhost:8888/public/server.ejs') // 记得有public，因为做了devServer-historyApiFallback
       .then(res => {
         // 如果使用res.data,那么每次的时候都会加载appxxx.js,会重新渲染一次页面，因此不能直观看到效果
-        const noJsHtml = `
-              <!DOCTYPE html>
-              <html lang="en">
-              <head>
-                  <meta charset="UTF-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                  <title>ejs</title>
-              </head>
-              <body>
-                  <!-- <div id="root">Webpack App</div> -->
-                  <div id="root"><%- appString %></div>
-                  <script>
-                    window.__INITIAL_STATE_ = <%- initialState %>
-                  </script>
-              </html>
-        `;
+        // const noJsHtml = `
+        //       <!DOCTYPE html>
+        //       <html lang="en">
+        //       <head>
+        //           <meta charset="UTF-8">
+        //           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        //           <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        //           <title>ejs</title>
+        //       </head>
+        //       <body>
+        //           <!-- <div id="root">Webpack App</div> -->
+        //           <div id="root"><%- appString %></div>
+        //           <script>
+        //             window.__INITIAL_STATE_ = <%- initialState %>
+        //           </script>
+        //       </html>
+        // `;
         // resolve(noJsHtml)
         resolve(res.data)
       })
@@ -44,7 +44,7 @@ const getModuleFromString = (bundle, filename) => {
     exports: {}
   }
 
-  const wrapper = NativeModule.wrap(bundle)  // 理解成一个函数
+  const wrapper = NativeModule.wrap(bundle) // 理解成一个函数
   const script = new vm.Script(wrapper, { // 执行这个函数的环境
     filename,
     displayErrors: true
@@ -54,7 +54,7 @@ const getModuleFromString = (bundle, filename) => {
   return m
 }
 
-const mfs = new MemoryFS
+const mfs = new MemoryFS()
 const serverCompiler = webpack(serverConfig)
 serverCompiler.outputFileSystem = mfs // 操作文件都在缓存中进行，更快；api跟node的fs一样
 

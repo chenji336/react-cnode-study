@@ -3,7 +3,7 @@ const queryString = require('query-string') // 对象转成a=1&&b=2
 
 const baseUrl = 'https://cnodejs.org/api/v1'
 
-module.exports = function(req, res, next) {
+module.exports = function (req, res, next) {
   const path = req.path // app.use('/api) 中api不会包含的
   const user = req.session.user || {} // 后续需要点出属性，所以至少要为{}
   const needAccessToken = req.query.needAccessToken
@@ -54,4 +54,3 @@ module.exports = function(req, res, next) {
       }
     })
 }
-

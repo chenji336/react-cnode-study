@@ -5,7 +5,7 @@ const baseUrl = 'https://cnodejs.org/api/v1'
 
 // 如果 login 不是 /login 会怎样,不影响
 // 就算不用router也是需要使用express.post的，因为要添加login路由
-router.post('/login', function(req, res, next) {
+router.post('/login', function (req, res, next) {
   axios.post(`${baseUrl}/accesstoken`, {
     accesstoken: req.body.accessToken
   })

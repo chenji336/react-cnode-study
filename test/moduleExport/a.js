@@ -1,4 +1,4 @@
-// module.exports.default = 1; 
+// module.exports.default = 1;
 // export default 1; // 等价上面的
 
 // module.exports.a = 1

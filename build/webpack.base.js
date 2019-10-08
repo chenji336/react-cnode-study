@@ -20,7 +20,7 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.js$/,  // 分开写是因为不想要编译node_modules中的js，因为已经编译过一遍了
+        test: /\.js$/, // 分开写是因为不想要编译node_modules中的js，因为已经编译过一遍了
         loader: 'babel-loader',
         exclude: [
           path.join(__dirname, '../node_modules')

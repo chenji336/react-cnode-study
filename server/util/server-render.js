@@ -3,9 +3,7 @@ const asyncBootstrap = require('react-async-bootstrapper') // 之前需要.defau
 const ejs = require('ejs')
 const Helmet = require('react-helmet').default
 
-
 const getStoreState = (stores) => {
-
   return Object.keys(stores).reduce((result, storeName) => {
     console.log('storeName:', storeName)
     result[storeName] = stores[storeName].toJson()

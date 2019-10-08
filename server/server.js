@@ -1,5 +1,4 @@
 const express = require('express')
-const ReactSSR = require('react-dom/server')
 const path = require('path')
 const fs = require('fs')
 const favicon = require('serve-favicon')
@@ -13,7 +12,7 @@ console.log('isDev', isDev)
 app.use(favicon(path.resolve(__dirname, '../favicon.ico')))
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(session({
   secret: 'react cnode class', // 加密的key
   name: 'tid', // cookie保存的名字
@@ -26,28 +25,27 @@ app.use('/api/user', require('./util/handle-login'))
 app.use('/api', require('./util/proxy')) // 斜杠不要忘了
 
 if (!isDev) {
-    const serverEntry = require('../dist/server-entry.js') // export的是default，require需要.default
-    const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8')
-    // 没有use('/public')，那么访问的dist/app.js 等价 http://localhost:3333/app.js
-    app.use('/public', express.static(path.join(__dirname, '../dist'))) // /public跟webpack中的publicPath相对应
+  const serverEntry = require('../dist/server-entry.js') // export的是default，require需要.default
+  const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8')
+  // 没有use('/public')，那么访问的dist/app.js 等价 http://localhost:3333/app.js
+  app.use('/public', express.static(path.join(__dirname, '../dist'))) // /public跟webpack中的publicPath相对应
 
-    // 上面的public执行了就不会执行这里的*，也就是说静态文件不会进入这里
-    app.get('*', function (req, res) {
-        console.log('req.path:', req.path)
-        serverRender(serverEntry, template, req, res)
-    })
-
+  // 上面的public执行了就不会执行这里的*，也就是说静态文件不会进入这里
+  app.get('*', function (req, res) {
+    console.log('req.path:', req.path)
+    serverRender(serverEntry, template, req, res)
+  })
 } else {
-    const devStatic = require('./util/dev-static')
-    // console.log('devStatic:', devStatic)
-    devStatic(app)
+  const devStatic = require('./util/dev-static')
+  // console.log('devStatic:', devStatic)
+  devStatic(app)
 }
 
-app.use(function(error, req, res, next) {
+app.use(function (error, req, res, next) {
   console.log(error)
   res.status(500).send(error)
 })
 
 app.listen(3333, function () {
-    console.log('server is listening 3333')
+  console.log('server is listening 3333')
 })
