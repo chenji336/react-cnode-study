@@ -21,16 +21,18 @@
 ## 工程架构
 
 #### webpack基础配置
+
 配置输入以及输出，通过参数[name][hash]，每次文件的改变都会引起hash值的改变
 webpack默认支持js的
 
 
 ### webpack loader的基本应用
+
 我们需要jsx语法，webpack默认是不支持的，所以需要loader进行转化
 需要安装react-dom,可以对比react-native.一个是浏览器上的，一个是手机端的
 就算没有使用到React也要import，因为所有的jsx语法都需要转译成React.createElement
 + babel-loader 默认支持了jsx语法转换
-+ babel-core loader只是进行转换，但是一些底层还是需要babel-core进行
++ babel-core loader只是进行转换，但是一些底层还是需要babel-core进行,转成ast树
 + .babelrc 进行具体的配置
     - 支持什么转换  preset中进行编写 babel-preset-es2015支持es6
     - react 支持react转换
@@ -39,14 +41,16 @@ webpack默认支持js的
 ### 服务端渲染基础配置
 
 #### 单页应用存在的问题？
+
 + SEO不友好，一开始取回来的只是一个没有内容的html，需要后续去填充
 + 首次加载慢，因为有很多的js和css需要去加载
 
 #### 开始进行服务端配置
+
 配置一下package.json build的时候client和server都能出来，使用rimraf清除dist目录（在webpack使用CleanWebpackPlugin也可以）
 服务端渲染跟客户端渲染不同：后台生成html，然后一起渲染给前端
 过程：
-+ 定义一个server-entry.js export <App />
++ 定义一个 server-entry.js，内容是 export <App />
 + 使用react-dom/server 把 server-entry renderToString 成string
 + 把上面的string插入到template.html的root下面（这样就可以使用跟客户端一样的template.html)
 + 需要npm run build，在进行npm run start
@@ -57,13 +61,15 @@ webpack默认支持js的
     可以对比一下浏览时候的html，会发现服务端渲染时候里面已经包含了hello word。引用外部js可能是为了另外一个话题了
 
 ### webpack-dev-server配置
+
 注意点： 需要删除掉dist，否则进行historyApiFallback的时候会报错（因为会先去找本地的dist，没有在找缓存）
 
 ### hot-module-reaplacement
+
 热更新流程：
 1. 普通热更新
     + webpack.config中开启hot:true,并且调用plugin：new webpack.HotModuleReplacement()
-    + moudle.hot.accept()即可，不过state每次刷新的时候都会重制
+    + moudle.hot.accept()即可，不过state每次刷新的时候都会重置
 2. 兼容react的热更新
     + 安装react-hot-loader
     + webpack.congif entry中加入react-hot-loader/patch
@@ -73,6 +79,7 @@ webpack默认支持js的
     为啥public后面也要斜杠，因为热更新的js也会使用这个publicPath，如果没有/，则public080999.js,正常应该是public/080999.js，可以打开chrome-network-preserve log进行查看
 
 ### 开发时的服务端渲染
+
 问题： 服务端渲染不想每次有所改动都需要重新编译打包?
 解决思路：
 1. 获取html：通过axios读取打包后的index.html,注意是/public/index.html
@@ -83,6 +90,7 @@ webpack默认支持js的
 渲染完成之后，还是会调用client端的js代码的，可以看日志发现调用了app.js
 
 ### 使用eslint和editConfig规范代码
+
 eslint：进行代码检查，是否符合rule规范；可以配合编辑器使用，在书写的时候就给出提示
 editorconfig: 不同编辑器(系统）对文本的处理格式有些不一样，如果不统一规范，可能代码拉下来会报错
 
@@ -99,7 +107,7 @@ npm i -d eslint babel-eslint(.eslintrc使用的到)) eslint-loader
         可以通过npx install-peerdeps --dev eslint-config-airbnb进行安装依赖
 ```
 **editorconfig使用：**
-+ vscode需要安装相应的插件，会自动显示出来（webstorm自动集成)
++ vscode需要安装相应的插件(EditorConfig for VS Code)，会自动显示出来（webstorm自动集成).不安装是没有效果的
 + 添加.editorconfig，配置所需即可
 
 **在git提交之前进行检查，如果不符合规则那么就提示错误**
@@ -113,7 +121,7 @@ npm i -d eslint babel-eslint(.eslintrc使用的到)) eslint-loader
 3. WebpackMerge(baseConfig, {xxx}),会进行深度复制
 
 解决favicon问题，服务端会出现（如果客户端缓存刷新的话也出现）
-1. 服务端找不到会定直接返回html
+1. 服务端找不到会直接返回html
 2. 思路：在template中添加link icon，不过因为webpack还没有配置图片的，所以这个思路不采纳
 3. 使用[serve-favicon](https://www.npmjs.com/package/serve-favicon)
   + npm i -D serve-favicon
@@ -134,7 +142,7 @@ npm i -d eslint babel-eslint(.eslintrc使用的到)) eslint-loader
     "build"
   ],
   "env": {
-    "NODE_ENV": "development" // nodemon是不能NODE_ENV=development nodemon xxx.js这么使用的，要使用本行
+    "NODE_ENV": "development" // ~~nodemon是不能NODE_ENV=development nodemon xxx.js这么使用的，要使用本行~~ 可以使用，之前理解有误
   },
   "verbose": true, // 输出更多的信息查看报错结果
   "ext": "js" // 只有js改变时候才触发
@@ -183,7 +191,7 @@ client
 
 > 为什么react-router-dom需要依赖react-router?
 
-react-router理解成基础路由，react-router-dom适合浏览器，react-router-native适合移动端，所以了他们都继承了react-router，如果以后还有什么直接即成react-router就好，不需要重新编写重复代码了。
+react-router理解成基础路由，react-router-dom适合浏览器，react-router-native适合移动端，所以了他们都继承了react-router，如果以后还有什么直接继承react-router就好，不需要重新编写重复代码了。
 
 > Redirect的使用？
 
@@ -257,15 +265,15 @@ body-parser、express-session、query-string的使用，相应的可以查看nod
 
 添加一个路由页面test.api.jsx进行调试，主要测试：无accessToken接口、login、有accessToken接口
 
->问题：服务端渲染启动的时候，如果访问localhost:3333会报错，err: Error: Invariant failed: You should not use <Link> outside a <Router>
-这个问题下面会解决，所以现在页面使用的化，需要使用代理
+> 问题：服务端渲染启动的时候，如果访问localhost:3333会报错，err: Error: Invariant failed: You should not use <Link> outside a <Router>
+这个问题下面会解决，~~所以现在页面使用的化，需要使用代理~~（这个问题跟代理无关）
 
   ```js
-  proxy: {
-    '/api':'http://localhost:3333' // localhost:3333/api代理到localhost:8888/api上面
-  }
+    proxy: {
+      '/api':'http://localhost:3333' // localhost:3333/api代理到localhost:8888/api上面
+    }
   ```
-这个问题还是要解决的，都服务端渲染了还用啥proxy啊～后续修复
+~~这个问题还是要解决的，都服务端渲染了还用啥proxy啊～后续修复~~之前理解错误
 
 axios的post请求主体是 data， fetch的post请求主体是 body。不要弄混了，要不然测试bug会花很多时间
 
@@ -273,13 +281,13 @@ axios的post请求主体是 data， fetch的post请求主体是 body。不要弄
 
 上一章问题：加入router和store后，服务端渲染出现问题，如何解决？
 
->如果不使用开发时候服务端的代码？那是不是就不需要在乎了？
+> 如果不使用开发时候服务端的代码？那是不是就不需要在乎了？
 
   不是，因为生成的server-entry还是有router和store的代码在里面
 
 > 解决路由跳转问题
 +  在server-entry.js中添加react-router-dom专门为服务端渲染的router的StaticRouter
-  > 解决了之前的报错，但是服务端<!--app>被替换成了空，没有数据
+  > 解决了之前的报错，但是服务端`<!--app>`被替换成了空，没有数据
 
 > 解决服务端store问题
 
@@ -301,9 +309,9 @@ axios的post请求主体是 data， fetch的post请求主体是 body。不要弄
 
 > mobx-state的改变
 1. react-async-bootstrapper可以在服务端进行监听，client代码里面进行修改
-  >初始化使用还有bug，服务端state修改了，但是前端还是没有修改
+  > 初始化使用还有bug，服务端state修改了，但是前端还是没有修改
 2. 获取到的store是getter和setter格式，转成json格式
-  >每次都需要刷新两次才能正确，否则服务端显示xxx不是function？后续有答案在解答
+  > 每次都需要刷新两次才能正确，否则服务端显示xxx不是function？后续有答案在解答
 3. 通过模板代码把转成的json格式替换到html中去
   + ejs，因为webpack也会解析ejs，所以需要<%%- appString %>
     + 默认的使用就是html 中使用htmlWebpackPlugin.options.title(重点是options)
@@ -314,7 +322,7 @@ axios的post请求主体是 data， fetch的post请求主体是 body。不要弄
 思考：服务端渲染的主要解决什么
 1. 渲染速度
 2. SEO
->跟是否可以触发事件是无关的，比如 topic-list 里面，如果只是使用服务端渲染没有引入 appxxxx.js，那么是不会触发 change 事件的
+> 跟是否可以触发事件是无关的，比如 topic-list 里面，如果只是使用服务端渲染没有引入 appxxxx.js，那么是不会触发 change 事件的
 
 > 未解决
 SEO和TITLE问题
