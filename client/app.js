@@ -27,7 +27,8 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
   ReactDOM.hydrate(
     <AppContainer>
       {/* new AppState是为了服务端渲染做的，但是这样每次hot时候就会重置appstate内容，看看后续是否有解决方案？ */}
-      {/* 发现直接使用 appState 也没有影响，后续看是不是自己遗漏了什么 */}
+      {/* ~~发现直接使用 appState 也没有影响，后续看是不是自己遗漏了什么~~ */}
+      {/* 如果使用appState,服务端返回的appState !== appState;使用new AppState(initialState.appState)就可以保持一直 */}
       <Provider appState={new AppState(initialState.appState)}>
         <BrowserRouter>
           <MuiThemeProvider theme={theme}>

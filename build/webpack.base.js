@@ -10,7 +10,7 @@ module.exports = {
       {
         test: /\.(jsx|js)$/,
         loader: 'eslint-loader',
-        enforce: 'pre', // 每次打包前进行检查，如果出现错误则不执行下去
+        enforce: 'pre', // 其他loader之前先执行，比如：jsx先进行了babel-loader,在执行eslint-loader就有问题（已经变成了es5语法了);所有loader执行之后在执行，可以使用 post
         exclude: [
           path.resolve(__dirname, '../node_modules') // 不检查node_modules
         ]

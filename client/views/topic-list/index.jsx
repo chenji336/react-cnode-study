@@ -42,8 +42,8 @@ export default class TopicList extends React.Component {
     console.log('asyncStrap1') // 这个log会在服务端显示，浏览器不显示
     return new Promise((resolve) => {
       setTimeout(() => {
-        this.props.appState.count = 3 // 一般不推荐这么修改
-        this.setState({ // 这一块服务端渲染还是没有解决的
+        this.props.appState.count = 3 // 一般不推荐这么修改；appState是一个对象，所以更改了，传递给服务端也是最新的
+        this.setState({ // 这一块服务端渲染还是没有解决的；state没有传递给服务端，所以这一块没有更新
           x: 2,
         })
         resolve() // 需要返回true，否则不触发react-async-bootstrapper（最新版本的没有发现这个问题）

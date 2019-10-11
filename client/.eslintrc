@@ -1,6 +1,6 @@
 {
   "extends": "airbnb", // 按照爱比邻规范来，他们react规范做的比较好
-  "parser": "babel-eslint",
+  "parser": "babel-eslint", // 配合babel 或则 webpack 都需要 babel-eslint,否则一些babel的语法（es6)不认识
   "parserOptions": {
     "ecmaVersion": 6, // 支持es6
     "sourceType": "module", // 支持模块化
