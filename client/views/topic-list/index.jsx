@@ -5,7 +5,7 @@ import {
 } from 'mobx-react'
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
-import Button from 'material-ui/Button'
+import Button from '@material-ui/core/Button';
 import AppState from '../../store/app-state'
 
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
@@ -69,7 +69,7 @@ export default class TopicList extends React.Component {
           <title>This is topic list</title>
           <meta name="description" content="this is description" />
         </Helmet>
-        <Button raised color="primary">this is a button</Button>
+        <Button raised="true" color="primary">this is a button</Button>
         <input onChange={this.changeName} />
         <span>{appState.msg}</span>
         <span>{x}</span>

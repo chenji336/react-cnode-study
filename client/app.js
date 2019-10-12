@@ -3,8 +3,8 @@ import React from 'react' // 这里没有使用到React为啥要写了，因为�
 import { AppContainer } from 'react-hot-loader'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui'
-import { pink, lightBlue } from 'material-ui/colors'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { lightBlue, pink } from '@material-ui/core/colors';
 // import { pink, lightBlue } from 'material-ui/colo'
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
 import AppState from './store/app-state'
