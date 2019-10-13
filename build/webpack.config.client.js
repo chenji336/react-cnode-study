@@ -34,7 +34,7 @@ if (isDev) {
   config.devServer = {
     host: '0.0.0.0',
     port: '8888',
-    contentBase: path.join(__dirname, '../dist'), // 内容的缓存位置,默认先进入这里查找index.html [可以参考](/Users/liulei/Documents/GitHub/tool/webpack/offical-study/指南/05开发/webpack-demo-contentBase)
+    // contentBase: path.join(__dirname, '../dist'), // 内容的缓存位置,默认先进入这里查找index.html [可以参考](/Users/liulei/Documents/GitHub/tool/webpack/offical-study/指南/05开发/webpack-demo-contentBase)
     hot: true, // 进行热加载，现在还没有，所以先不需要
     overlay: {
       errors: true // 报错的时候出现一个悬浮层出现错误

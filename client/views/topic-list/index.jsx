@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import Button from '@material-ui/core/Button';
+import Container from '../layout/container'
 import AppState from '../../store/app-state'
 
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
@@ -64,7 +65,7 @@ export default class TopicList extends React.Component {
     const { appState } = this.props
     const { x } = this.state
     return (
-      <div>
+      <Container>
         <Helmet>
           <title>This is topic list</title>
           <meta name="description" content="this is description" />
@@ -73,7 +74,7 @@ export default class TopicList extends React.Component {
         <input onChange={this.changeName} />
         <span>{appState.msg}</span>
         <span>{x}</span>
-      </div>
+      </Container>
     )
   }
 }

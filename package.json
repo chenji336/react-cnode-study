@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
@@ -35,13 +36,13 @@
     "react-async-bootstrapper": "^2.1.1",
     "react-dom": "^16.8.3",
     "react-helmet": "^5.2.0",
+    "react-hot-loader": "^4.7.2",
     "react-jss": "^8.6.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "serialize-javascript": "^1.6.1",
     "serve-favicon": "^2.5.0",
-    "webpack": "^3.9.1",
-    "react-hot-loader": "^4.7.2"
+    "webpack": "^3.9.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

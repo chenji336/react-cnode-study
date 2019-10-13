@@ -35,5 +35,8 @@
     "react/destructuring-assignment": [
       0
     ],
+    "react/forbid-prop-types": [ // prop-types 可以为 object
+      0
+    ],
   }
 }
