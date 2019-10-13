@@ -69,7 +69,7 @@ export default class TopicList extends React.Component {
           <title>This is topic list</title>
           <meta name="description" content="this is description" />
         </Helmet>
-        <Button raised="true" color="primary">this is a button</Button>
+        <Button variant="contained" color="primary">this is a button</Button>
         <input onChange={this.changeName} />
         <span>{appState.msg}</span>
         <span>{x}</span>

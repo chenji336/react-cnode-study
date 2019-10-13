@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { lightBlue, pink } from '@material-ui/core/colors';
-// import { pink, lightBlue } from 'material-ui/colo'
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
 import AppState from './store/app-state'
 
@@ -22,6 +21,24 @@ const theme = createMuiTheme({
 
 const root = document.getElementById('root')
 const initialState = window.__INITIAL_STATE__ || {} // eslint-disable-line
+
+// 服务端启动->客户端渲染用的html是server.ejs,如果不移除 jss-server-side dom结点，则css会重复
+const createApp = (TheApp) => {
+  class Main extends React.Component {
+    componentDidMount() {
+      const jssStyle = document.getElementById('jss-server-side')
+      if (jssStyle && jssStyle.parentNode) {
+        jssStyle.parentNode.removeChild(jssStyle)
+      }
+    }
+
+    render() {
+      return <TheApp />
+    }
+  }
+  return Main
+}
+
 const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不需要返回
   // **AppContainer一定要放在最顶层
   ReactDOM.hydrate(
@@ -41,13 +58,13 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
   )
 }
 
-render(App)
+render(createApp(App))
 // console.log('module.hot:', module.hot)
 // module.hot.accept(); // 简写成这种现在也能成功，不知道是否有副作用
 if (module.hot) {
   module.hot.accept('./views/App', () => {
     console.log('accept hot') // 测试是不是进行了监听。答：确实，每次都会执行
     const NextApp = require('./views/App').default // eslint-disable-line
-    render(NextApp)
+    render(createApp(NextApp))
   })
 }

@@ -340,6 +340,7 @@ mbox的warning：每次刷新的时候都会重新打包server-entry.js，这样
 SEO：主要是title和meta
 <title>这个是需要被seo的标题</title>
 <meta name='描述' content='具体的描述信息' />
+[更详细的SEO规则](http://wiki.jpushoa.com/pages/viewpage.action?pageId=17538491)
 
 参照react-async-bootstrapper，在组件里面编写具体的内容，然后server里面可以获取到，然后渲染到ejs中
 
@@ -371,4 +372,6 @@ serverBundle不存在情况下，提示客户等下再次进行刷新（这个�
 
 ### material 使用
 
-安装注意：按照视频必须安装 `npm i -S material-ui@1.0.0-beta.23`
+[参考文档3.x版本](https://v3.material-ui.com/getting-started/installation/)
+material使用：需要用到什么就引用什么
+关键点：material生成的css需要在服务端生成插入
