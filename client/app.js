@@ -8,6 +8,7 @@ import { lightBlue, pink } from '@material-ui/core/colors';
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
 import AppState from './store/app-state'
 
+// 定义全局css变量，后续都可以从theme中获取到，比如：./views/topic-list/styles.js中的theme
 const theme = createMuiTheme({
   palette: {
     primary: pink,
