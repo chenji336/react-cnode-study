@@ -41,7 +41,7 @@ if (isDev) {
     },
     publicPath: '/public', // 所有的文件都需要在前面加上/public，默认是没有;对应着output-publicPath里的内容
     historyApiFallback: { // 很恶心的一个错误就是因为dist目录已经存在，导致查找js有问题
-      index: '/public/index.html' // 所有的404都会进入到index.html
+      index: '/public/index.html' // 所有的404都会进入到index.html,index跟publishPath有关
     },
     proxy: {
       '/api': 'http://localhost:3333', // 把localhost:3333/api代理到localhost:8888/api上

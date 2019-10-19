@@ -18,6 +18,10 @@
 }
 ```
 
+## 疑惑
+
+> server端 externals 了 dependencies 里面的库，那么是不是服务端打包的时候需要进行 npm install 的安装了？
+
 ## 工程架构
 
 #### webpack基础配置
