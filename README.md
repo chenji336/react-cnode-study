@@ -22,6 +22,25 @@
 
 > server端 externals 了 dependencies 里面的库，那么是不是服务端打包的时候需要进行 npm install 的安装了？
 
+> server端 如何加载自己定义的css？而且现在有 dense of undefined报错
+
+@material-ui/core 版本安装 3.3.0 ，解决报错问题
+
+> server端 刷新之后样式就不见了？原因是因为 app.js 没有替换掉root内容？
+
+不推荐解决方案：我现在发现比较挫的解决方案是：hydrate 替换成 render
+
+原理找到了：
+1. hydrate会**服用**服务端生成的html代码，所以**虚拟dom**会服用，但是复用的时候class是不会进行监听的，所以appString的内容是没变的，但是这个时候引用的style改变了
+2. material-ui 的bug，服务端生成既然和客户端生成的 classname 不一致，这个导致了现在的问题
+
+解决方案：
+1. 添加 sheetManger = new map() 这样可以解决一部分class改变，但是没有彻底解决
+2. Avatar组件不用用listItem包装,但是还是解决不彻底
+
+** 后续有空把 material-ui 升级到最新版本，看看可不可以解决 **
+
+
 ## 工程架构
 
 #### webpack基础配置

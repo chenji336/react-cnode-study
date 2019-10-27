@@ -18,16 +18,19 @@ useStaticRendering(true)
  * jss：jss实例，并且使用了默认插件
  * theme：material的样式，跟app.js下的样式差不多
  */
-export default (stores, routerContext, sheetsRegistry, jss, theme, url) => (
-  <Provider {...stores}>
-    <StaticRouter context={routerContext} location={url}>
-      <JssProvider registry={sheetsRegistry} jss={jss}>
-        <MuiThemeProvider theme={theme}>
-          <App />
-        </MuiThemeProvider>
-      </JssProvider>
-    </StaticRouter>
-  </Provider>
-)
+export default (stores, routerContext, sheetsRegistry, jss, theme, url) => {
+  const sheetsManager = new Map()
+  return (
+    <Provider {...stores}>
+      <StaticRouter context={routerContext} location={url}>
+        <JssProvider registry={sheetsRegistry} jss={jss}>
+          <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
+            <App />
+          </MuiThemeProvider>
+        </JssProvider>
+      </StaticRouter>
+    </Provider>
+  )
+}
 
 export { createStoreMap }
