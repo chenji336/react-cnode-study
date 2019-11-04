@@ -7,26 +7,18 @@ import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import List from '@material-ui/core/List';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '../layout/container'
-import AppState from '../../store/app-state'
-import TopicListItem from './list-item';
-
-const topic = {
-  title: 'this is title',
-  username: 'cyc',
-  reply_count: 10,
-  visit_count: 100,
-  create_at: '2019-03-20',
-  tab: 'share',
-};
+import TopicListItem from './list-item'
+import { AppState, TopicStore } from '../../store/store'
 
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
-@inject('appState') @observer
+@inject(stores => ({
+  appState: stores.appState,
+  topicStore: stores.topicStore,
+})) @observer
 export default class TopicList extends React.Component {
-  static propTypes = { // ~~说明还是有些浏览器不需要使用transofrm-class-property，如果需要在添加上~~
-    appState: PropTypes.instanceOf(AppState), // 如果只是PropTypes.object则会报错，使用这种相当于匹配这种类型
-  }
-
   constructor() {
     super()
     this.state = {
@@ -34,6 +26,10 @@ export default class TopicList extends React.Component {
     };
     this.changeTab = this.changeTab.bind(this);
     this.listItemClick = this.listItemClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.topicStore.fetchTopics()
   }
 
   changeTab(e, index) {
@@ -68,6 +64,11 @@ export default class TopicList extends React.Component {
     const {
       tabIndex,
     } = this.state;
+    const {
+      topicStore,
+    } = this.props;
+    const { syncing: syncingTopics, topics: topicList } = topicStore;
+
     return (
       <Container>
         <Helmet>
@@ -82,16 +83,30 @@ export default class TopicList extends React.Component {
           <Tab label="精品" />
           <Tab label="测试" />
         </Tabs>
-        <TopicListItem onClick={this.listItemClick} topic={topic} />
+        <List>
+          {
+            topicList.map(topic => (
+              <TopicListItem onClick={this.listItemClick} topic={topic} key={topic.id} />
+            ))
+          }
+        </List>
+        {
+          syncingTopics ? (
+            <div>
+              <CircularProgress color="secondary" size={100} />
+            </div>
+          ) : null
+        }
       </Container>
     )
   }
 }
 
 // 也可以使用 stage-1  transform-class-properties 插件做成class static属性
-/* TopicList.propTypes = {
-  appState: PropTypes.instanceOf(AppState), // 如果只是PropTypes.object则会报错，使用这种相当于匹配这种类型
-} */
+TopicList.wrappedComponent.propTypes = {
+  appState: PropTypes.instanceOf(AppState).isRequired, // 如果只是PropTypes.object则会报错，使用这种相当于匹配这种类型
+  topicStore: PropTypes.instanceOf(TopicStore).isRequired,
+}
 
 // 为属性指定默认值,不考虑，在eslint中已经设置 放弃
 /* TopicList.defaultProps = {

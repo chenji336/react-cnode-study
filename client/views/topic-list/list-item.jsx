@@ -24,8 +24,8 @@ Primary.propTypes = {
 }
 
 const Secondary = ({ classes, topic }) => (
-  <div className={classes.root}>
-    <span className={classes.userName}>{topic.username}</span>
+  <span className={classes.root}>
+    <span className={classes.userName}>{topic.author.loginname}</span>
     <span className={classes.count}>
       <span className={classes.accentColor}>{topic.reply_count}</span>
       <span>/</span>
@@ -35,7 +35,7 @@ const Secondary = ({ classes, topic }) => (
       创建时间：
       {topic.create_at}
     </span>
-  </div>
+  </span>
 )
 
 const StyledSecondary = withStyles(secondaryStyle)(Secondary);
@@ -49,7 +49,7 @@ const TopicListItem = ({ onClick, topic }) => (
   <ListItem button onClick={onClick}>
     {/* 解决服务端渲染 Avatar class client 和 server不一致问题  */}
     {/* <ListItemAvatar> */}
-    <Avatar src={topic.image} />
+    <Avatar src={topic.author.avatar_url} />
     {/* </ListItemAvatar> */}
     <ListItemText
       primary={<StyledPrimary topic={topic} />}

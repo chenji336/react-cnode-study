@@ -33,6 +33,9 @@ module.exports = (bundle, template, req, res) => {
         accent: colors.lightBlue,
         type: 'light',
       },
+      typography: { // 保持跟 app.js一致
+        useNextVariants: true,
+      },
     })
 
     const app = serverBundle(stores, routerContext, sheetsRegistry, jss, theme, req.url)

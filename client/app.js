@@ -6,7 +6,7 @@ import { Provider } from 'mobx-react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { lightBlue, pink } from '@material-ui/core/colors';
 import App from './views/App' // webpack还没有配置，所以需要写后缀jsx
-import AppState from './store/app-state'
+import { AppState, TopicStore } from './store/store'
 
 // 定义全局css变量，后续都可以从theme中获取到，比如：./views/topic-list/styles.js中的theme
 const theme = createMuiTheme({
@@ -14,6 +14,9 @@ const theme = createMuiTheme({
     primary: pink,
     accent: lightBlue,
     type: 'light',
+  },
+  typography: { // 防止warning提示加的
+    useNextVariants: true,
   },
 })
 // hydrate 替换 render，这样可以比较客户端和服务端渲染是否有所不同（warn提示16.0以上版本需要）.服务端渲染效率更高
@@ -40,6 +43,9 @@ const createApp = (TheApp) => {
   return Main
 }
 
+const appState = new AppState(initialState.appState)
+const topicStore = new TopicStore(initialState.topicStore)
+
 const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不需要返回
   // **AppContainer一定要放在最顶层
   ReactDOM.hydrate(
@@ -47,7 +53,7 @@ const render = (Component) => { // 1.参数需要圆括号 2.ReactDOM.render不�
       {/* new AppState是为了服务端渲染做的，但是这样每次hot时候就会重置appstate内容，看看后续是否有解决方案？ */}
       {/* ~~发现直接使用 appState 也没有影响，后续看是不是自己遗漏了什么~~ */}
       {/* 如果使用appState,服务端返回的appState !== appState;使用new AppState(initialState.appState)就可以保持一直 */}
-      <Provider appState={new AppState(initialState.appState)}>
+      <Provider appState={appState} topicStore={topicStore}>
         <BrowserRouter>
           <MuiThemeProvider theme={theme}>
             <Component />

@@ -40,6 +40,11 @@
 
 ** 后续有空把 material-ui 升级到最新版本，看看可不可以解决 **
 
+> 正式环境样式错乱 `npm run start`?
+
+因为设置了NODE_ENV=production，material-ui在正式环境打包的className是简介版本的，导致了一些 client & server class不一致冲突
+解决：不设置 NODE_ENV=production就可以（后续有更好的方法在研究下）
+
 
 ## 工程架构
 
