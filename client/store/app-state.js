@@ -1,39 +1,77 @@
 import {
   observable,
-  computed,
   action,
-} from 'mobx'
+} from 'mobx';
 
-// 服务端渲染需要在外面每次都创建新的实例，所以这里直接返回class（之前版本是返回实例的）
+import { get, post } from '../utils/http';
+
 export default class AppState {
-  constructor({ name, count } = { name: 'chenji', count: 0 }) {
-    this.name = name
-    this.count = count
+  @observable user = {
+    isLogin: false,
+    info: {},
+    detail: {
+      recentTopics: [],
+      recentReplies: [],
+      syncing: false,
+    },
+    collections: {
+      list: [],
+      syncing: false,
+    },
   }
 
-  @observable count
-
-  @observable name
-
-  @computed get msg() {
-    return `${this.name} say count is ${this.count}`
+  @action login(accessToken) {
+    return new Promise((resolve, reject) => {
+      post('user/login', {}, {
+        accessToken,
+      }).then((resp) => {
+        if (resp.success) {
+          this.user.isLogin = true;
+          this.user.info = resp.data;
+          resolve();
+        } else {
+          reject(resp);
+        }
+      }).catch(reject)
+    })
   }
 
-  @action add() {
-    this.count += 1
+  @action getUserDetail() {
+    this.user.detail.syncing = true;
+    return new Promise((resolve, reject) => {
+      get(`user/${this.user.info.loginname}`)
+        .then((resp) => {
+          if (resp.success) {
+            this.user.detail.recentReplies = resp.data.recent_replies;
+            this.user.detail.recentTopics = resp.data.recent_topics;
+            resolve()
+          } else {
+            reject()
+          }
+          this.user.detail.syncing = false;
+        })
+        .catch((err) => {
+          reject(err);
+          this.user.detail.syncing = false;
+        })
+    })
   }
 
-  @action change(name) {
-    this.name = name
-  }
-
-  // 服务端渲染使用
-  toJson() {
-    return {
-      name: this.name,
-      count: this.count,
-    }
+  @action getUserCollection() {
+    this.user.collections.syncing = true;
+    return new Promise((resolve, reject) => {
+      get(`topic_collect/${this.user.info.loginname}`).then((resp) => {
+        if (resp.success) {
+          this.user.collections.list = resp.data;
+          resolve();
+        } else {
+          reject();
+        }
+        this.user.collections.syncing = false;
+      }).catch((err) => {
+        reject(err);
+        this.user.collections.syncing = true;
+      })
+    })
   }
 }
-
-export const appState = new AppState() // 留着对比测试：不每次新建的情况下热更新

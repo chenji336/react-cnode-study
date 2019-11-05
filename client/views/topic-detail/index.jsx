@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet'
 import marked from 'marked';
+import dateFormat from 'dateformat'
 import {
   inject,
   observer,
@@ -56,7 +57,7 @@ class TopicDetail extends React.Component {
         <Paper elevation={4} className={classes.replies}>
           <header className={classes.replyHeader}>
             <span>{`${topic.reply_count} 回复`}</span>
-            <span>{`最新回复 ${topic.last_reply_at}`}</span>
+            <span>{`最新回复 ${dateFormat(topic.last_reply_at, 'yyyy-mm-dd')}`}</span>
           </header>
           <section>
             {

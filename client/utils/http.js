@@ -9,7 +9,7 @@ const parseUrl = (url, params) => {
   return `${baseUrl}/api/${url}?${str.substr(0, str.length - 1)}`
 }
 
-export const get = (url, params) => new Promise((resolve, reject) => {
+export const get = (url, params = {}) => new Promise((resolve, reject) => {
   axios(parseUrl(url, params))
     .then((resp) => {
       const { data } = resp
@@ -22,14 +22,14 @@ export const get = (url, params) => new Promise((resolve, reject) => {
     .catch(reject)
 })
 
-export const post = (url, params, data) => new Promise((resolve, reject) => {
-  axios.post(parseUrl(url, params), data)
+export const post = (url, params, postData) => new Promise((resolve, reject) => {
+  axios.post(parseUrl(url, params), postData)
     .then((resp) => {
-      const { resData } = resp
+      const { data } = resp
       if (data && data.success) {
-        resolve(resData)
+        resolve(data)
       } else {
-        reject(resData)
+        reject(data)
       }
     })
     .catch(reject)

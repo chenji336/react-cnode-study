@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import HomeIcon from '@material-ui/icons/Home'
+import { inject, observer } from 'mobx-react'
 
 const styles = {
   root: {
@@ -17,7 +18,14 @@ const styles = {
   },
 }
 
+@inject(stores => ({
+  appState: stores.appState,
+})) @observer
 class MainAppBar extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object,
+  }
+
   constructor() {
     super()
     this.onHomeIconClick = this.onHomeIconClick.bind(this)
@@ -26,9 +34,8 @@ class MainAppBar extends React.Component {
   }
 
   /* eslint-disable */
-
   onHomeIconClick() {
-
+    this.context.router.history.push('/index')
   }
 
   createButtonClick() {
@@ -36,13 +43,17 @@ class MainAppBar extends React.Component {
   }
 
   loginButtonClick() {
-
+    if (this.props.appState.user.isLogin) {
+      this.context.router.history.push('/user/info');
+    } else {
+      this.context.router.history.push('/user/login');
+    }
   }
-
   /* eslint-enable */
 
   render() {
-    const { classes } = this.props
+    const { classes, appState } = this.props
+    const { user } = appState
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -54,12 +65,22 @@ class MainAppBar extends React.Component {
                 CNode
             </Typography>
             <Button variant="contained" color="secondary" onClick={this.createButtonClick}>新建话题</Button>
-            <Button color="inherit" onClick={this.loginButtonClick}>登录</Button>
+            <Button color="inherit" onClick={this.loginButtonClick}>
+              {
+                user.isLogin
+                  ? user.info.loginname
+                  : '登录'
+              }
+            </Button>
           </ToolBar>
         </AppBar>
       </div>
     )
   }
+}
+
+MainAppBar.wrappedComponent.propTypes = {
+  appState: PropTypes.object.isRequired,
 }
 
 MainAppBar.propTypes = {
