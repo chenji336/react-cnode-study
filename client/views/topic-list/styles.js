@@ -16,6 +16,9 @@ export const topicPrimaryStyle = theme => ({
     marginRight: 10,
     fontSize: '12px',
   },
+  top: {
+    backgroundColor: theme.palette.secondary[500],
+  },
 })
 
 export const secondaryStyle = theme => ({ // secondaryStyle直接赋值为一个对象也行

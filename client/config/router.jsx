@@ -18,7 +18,8 @@ export default () => [
     exact
     key="first"
   />,
+  <Route path="/index" exact component={TopicList} key="index" />,
   <Route path="/list" exact component={TopicList} key="list" />,
-  <Route path="/detail" exact component={TopicDetail} key="detail" />,
+  <Route path="/detail/:id" exact component={TopicDetail} key="detail" />,
   <Route path="/test" exact component={TestApi} key="test" />,
 ]

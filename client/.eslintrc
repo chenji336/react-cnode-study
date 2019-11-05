@@ -37,6 +37,21 @@
     ],
     "react/forbid-prop-types": [ // prop-types 可以为 object
       0
+    ],
+    "react/sort-comp": [
+      0
+    ],
+    "no-param-reassign": [
+      0
+    ],
+    "max-len": [
+      0
+    ],
+    "react/self-closing-comp": [
+      0
+    ],
+    "react/no-danger": [
+      0
     ]
   }
 }

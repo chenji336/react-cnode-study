@@ -6,15 +6,24 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
+import dateformat from 'dateformat';
+import cx from 'classnames';
 
 import { topicPrimaryStyle, secondaryStyle } from './styles';
+import { tabs } from '../../utils/variable-define';
 
-const Primary = ({ classes, topic }) => (
-  <div className={classes.root}>
-    <span className={classes.tab}>{topic.tab}</span>
-    <span className={classes.title}>{topic.title}</span>
-  </div>
-)
+const Primary = ({ classes, topic }) => {
+  const classNames = cx({
+    [classes.tab]: true,
+    [classes.top]: topic.top,
+  })
+  return (
+    <div className={classes.root}>
+      <span className={classNames}>{topic.top ? '置顶' : tabs[topic.tab]}</span>
+      <span className={classes.title}>{topic.title}</span>
+    </div>
+  )
+}
 
 const StyledPrimary = withStyles(topicPrimaryStyle)(Primary);
 
@@ -33,7 +42,7 @@ const Secondary = ({ classes, topic }) => (
     </span>
     <span>
       创建时间：
-      {topic.create_at}
+      {dateformat(topic.create_at, 'yyyy年mm月dd日')}
     </span>
   </span>
 )

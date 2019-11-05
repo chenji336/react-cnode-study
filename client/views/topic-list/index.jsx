@@ -5,6 +5,7 @@ import {
 } from 'mobx-react'
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
+import queryString from 'query-string'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import List from '@material-ui/core/List';
@@ -12,6 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '../layout/container'
 import TopicListItem from './list-item'
 import { AppState, TopicStore } from '../../store/store'
+import { tabs } from '../../utils/variable-define'
 
 // 使用装饰器和export default时候报错，找了很久原因（回想以下）
 @inject(stores => ({
@@ -19,30 +21,50 @@ import { AppState, TopicStore } from '../../store/store'
   topicStore: stores.topicStore,
 })) @observer
 export default class TopicList extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object,
+  }
+
   constructor() {
     super()
-    this.state = {
-      tabIndex: 0,
-    };
     this.changeTab = this.changeTab.bind(this);
     this.listItemClick = this.listItemClick.bind(this);
   }
 
-  componentDidMount() {
-    this.props.topicStore.fetchTopics()
+  componentWillReceiveProps(nextProps) {
+    // 路由参数改变，不会进入到 componentDidMount，所以需要 componentWillReceiveProps 执行fetchTopics
+    if (this.props.location.search !== nextProps.location.search) {
+      this.props.topicStore.fetchTopics(this.getTab(nextProps.location.search))
+    }
   }
 
-  changeTab(e, index) {
-    this.setState({
-      tabIndex: index,
+  componentDidMount() {
+    const tab = this.getTab()
+    this.props.topicStore.fetchTopics(tab)
+  }
+
+  getTab(search) {
+    search = search || this.props.location.search
+    const query = queryString.parse(search)
+    return query.tab || 'all'
+  }
+
+  changeTab(e, value) {
+    console.log('changeTab:', value)
+    // this.context.router.history.push({
+    //   pathname: '/index',
+    //   search: `?tab=${value}`,
+    // })
+
+    this.props.history.push({ // 建议直接使用 props.history
+      pathname: '/index',
+      search: `?tab=${value}`,
     })
   }
 
-  /* eslint-disable */
-  listItemClick() {
-
+  listItemClick(topic) {
+    this.props.history.push(`/detail/${topic.id}`)
   }
-  /* eslint-enable */
 
   // 可以理解成react-async-bootstrapper的生命周期了
   // 命名成bootstrap或则asyncBootstrap都可以,不过推荐是bootstrap
@@ -62,9 +84,6 @@ export default class TopicList extends React.Component {
 
   render() {
     const {
-      tabIndex,
-    } = this.state;
-    const {
       topicStore,
     } = this.props;
     const { syncing: syncingTopics, topics: topicList } = topicStore;
@@ -75,24 +94,29 @@ export default class TopicList extends React.Component {
           <title>This is topic list</title>
           <meta name="description" content="this is description" />
         </Helmet>
-        <Tabs value={tabIndex} onChange={this.changeTab}>
-          <Tab label="全部" />
-          <Tab label="分享" />
-          <Tab label="工作" />
-          <Tab label="问答" />
-          <Tab label="精品" />
-          <Tab label="测试" />
+        <Tabs value={this.getTab()} onChange={this.changeTab}>
+          {
+            Object.keys(tabs).map(tabName => (
+              <Tab label={tabs[tabName]} value={tabName} key={tabName} />
+            ))
+          }
         </Tabs>
         <List>
           {
             topicList.map(topic => (
-              <TopicListItem onClick={this.listItemClick} topic={topic} key={topic.id} />
+              <TopicListItem onClick={() => this.listItemClick(topic)} topic={topic} key={topic.id} />
             ))
           }
         </List>
         {
           syncingTopics ? (
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                padding: '40px 0',
+              }}
+            >
               <CircularProgress color="secondary" size={100} />
             </div>
           ) : null
@@ -106,6 +130,11 @@ export default class TopicList extends React.Component {
 TopicList.wrappedComponent.propTypes = {
   appState: PropTypes.instanceOf(AppState).isRequired, // 如果只是PropTypes.object则会报错，使用这种相当于匹配这种类型
   topicStore: PropTypes.instanceOf(TopicStore).isRequired,
+}
+
+TopicList.propTypes = {
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object,
 }
 
 // 为属性指定默认值,不考虑，在eslint中已经设置 放弃
