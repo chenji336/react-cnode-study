@@ -33,13 +33,12 @@ class MainAppBar extends React.Component {
     this.loginButtonClick = this.loginButtonClick.bind(this)
   }
 
-  /* eslint-disable */
   onHomeIconClick() {
     this.context.router.history.push('/index')
   }
 
   createButtonClick() {
-
+    this.context.router.history.push('/topic/create')
   }
 
   loginButtonClick() {
@@ -49,7 +48,6 @@ class MainAppBar extends React.Component {
       this.context.router.history.push('/user/login');
     }
   }
-  /* eslint-enable */
 
   render() {
     const { classes, appState } = this.props
@@ -67,7 +65,7 @@ class MainAppBar extends React.Component {
             <Button variant="contained" color="secondary" onClick={this.createButtonClick}>新建话题</Button>
             <Button color="inherit" onClick={this.loginButtonClick}>
               {
-                user.isLogin
+                user && user.isLogin
                   ? user.info.loginname
                   : '登录'
               }

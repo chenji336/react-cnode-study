@@ -6,6 +6,7 @@ import {
 } from 'mobx';
 import {
   get,
+  post,
 } from '../utils/http';
 import { topicSchema } from '../utils/variable-define';
 
@@ -91,6 +92,33 @@ export default class TopicStore {
           }
         }).catch(reject)
       }
+    })
+  }
+
+  // update 2019-03-21: 涉及发帖和发评论的接口都已经下线了，太多人为了测试客户端乱发帖了。
+  @action createTopic(title, tab, content) {
+    return new Promise((resolve, reject) => {
+      post('topics', {
+        needAccessToken: true,
+      }, {
+        title,
+        tab,
+        content,
+      }).then((resp) => {
+        if (resp.success) {
+          const topic = {
+            title,
+            tab,
+            content,
+            id: resp.topic_id,
+            create_at: Date.now(),
+          };
+          this.createdTopics.push(new Topic(createTopic(topic)));
+          resolve()
+        } else {
+          reject()
+        }
+      }).catch(reject)
     })
   }
 }

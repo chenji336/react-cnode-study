@@ -403,3 +403,9 @@ serverBundle不存在情况下，提示客户等下再次进行刷新（这个�
 [参考文档3.x版本](https://v3.material-ui.com/getting-started/installation/)
 material使用：需要用到什么就引用什么
 关键点：material生成的css需要在服务端生成插入
+
+### 业务编写
+
+update 2019-03-21: 涉及发帖和发评论的接口都已经下线了，太多人为了测试客户端乱发帖了。
+
+所以发帖和评论会显示404,自己需要直接去网站发布

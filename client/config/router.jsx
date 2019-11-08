@@ -9,6 +9,7 @@ import TopicDetail from '../views/topic-detail'
 import TestApi from '../views/test/api-test'
 import UserLogin from '../views/user/login'
 import UserInfo from '../views/user/info'
+import TopicCreate from '../views/topic-create'
 
 // 如果没有
 export default () => [
@@ -25,5 +26,6 @@ export default () => [
   <Route path="/detail/:id" exact component={TopicDetail} key="detail" />,
   <Route path="/user/login" exact component={UserLogin} key="login" />,
   <Route path="/user/info" exact component={UserInfo} key="info" />,
+  <Route path="/topic/create" exact component={TopicCreate} key="create" />,
   <Route path="/test" exact component={TestApi} key="test" />,
 ]
