@@ -29,7 +29,7 @@
     "express-session": "^1.15.6",
     "jss": "^9.8.7",
     "jss-preset-default": "^10.0.0-alpha.7",
-    "marked": "^0.7.0",
+    "marked": "^4.0.10",
     "material-ui-icons": "^1.0.0-beta.36",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
